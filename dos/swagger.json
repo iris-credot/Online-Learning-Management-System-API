@@ -1,0 +1,286 @@
+
+  {
+    "swagger":"2.0",
+    "info":{
+        "title":"Authentication Project",
+        "description":"API documentation for Authentication Project",
+        "version":"1.0.0"
+    },
+    "schemes":["http","https"],
+
+    "paths":{
+        "/user/all":{
+            "get":{
+                "summary":"Get all users",
+                "description":"All users",
+                "tags":["Users"],
+                "responses":{
+                    "200":{
+                        "description":"A list of all users"
+                    },
+                    "400":{
+                        "description":"OPPS......Something went wrong"
+                    }  
+                }
+
+           }
+        },
+        "/user/signup":{
+             "post":{
+                "summary":"Create a new user",
+                "description":"Create a new user and add it to the database",
+                "tags":["Authentication","Users"],
+                "parameters":[{
+                    "name":"body",
+                    "in":"body",
+                    "description":"User details",
+                    "required":"true",
+                    "schema":{
+                        "type":"object",
+                        "properties":{
+                          "username":{
+                            "type": "string",
+                            "required": [true,"Please provide your username first"]
+                         },
+                              "name":{
+                               "type": "string",
+                               "required": [true,"Please provide email first"]
+                            },
+                            "email":{
+                            "type": "string",
+                            "required": [true,"Please provide email first"],
+                            "unique": "true",
+                            "lowercase": "true",
+                            "validate":["isEmail","Please provide a valid email"]
+                            },
+                           "password":{
+                            "type": "string",
+                            "required": [true,"Please provide email first"],
+                            "minLength": [6,"Must be at least 6 characters"]
+                            }
+                              
+                        }
+                    }
+                }],
+                "responses":{
+                    "201": {
+                        "description": "User created"
+                      },
+                      "403": {
+                        "description": "A User with this email already exists."
+                      },
+                      "500": {
+                        "description": "There was an error processing your request. Please try again later."
+                      } 
+                }
+
+             }           
+},
+"/login":{
+    "post":{
+       "summary":"Login a new user",
+       "description":"Login a new user and add it to the database",
+       "tags":["Authentication"],
+       "parameters":[{
+           "name":"body",
+           "in":"body",
+           "description":"User details",
+           "required":"true",
+           "schema":{
+               "type":"object",
+               "properties":{
+                   "email":{
+                  "type": "string",
+                   "required": [true,"Please provide email first"],
+                   "unique": "true",
+                   "lowercase": "true",
+                   "validate":["isEmail","Please provide a valid email"]
+                   },
+                  "password":{
+                   "type": "string",
+                   "required": [true,"Please provide email first"],
+                   "minLength": [6,"Must be at least 6 characters"]
+                   }
+                     
+               }
+           }
+       }],
+       "responses":{
+           "201": {
+               "description": "User created"
+             },
+             "409": {
+               "description": "A User with this email already exists."
+             },
+             "503": {
+               "description": "There was an error processing your request. Please try again later."
+             } 
+       }
+    }           
+},
+"/user/allone/{id}":{
+    "get":{
+        "summary": "Get a user by ID",
+        "description": "Get a user by ID",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the user to retrieve",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+    },
+    "put":{
+      "summary":"Update a user by ID",
+      "description":"Update an existing user in the database",
+      "tags":["Users"],
+      "parameters":[{
+         "name":"id",
+         "in":"path",
+         "description":"ID of the user to update",
+         "required":"true",
+         "type":"string"
+         },
+         {
+             "name": "body",
+             "in": "body",
+             "description": "User details",
+             "required": true,
+             "schema": {
+               "type": "object",
+               "properties": {
+                "username":{
+                  "type": "string",
+                  "required": [true,"Please provide your username first"]
+               },
+                    "name":{
+                     "type": "string",
+                     "required": [true,"Please provide email first"]
+                  },
+                  "email":{
+                  "type": "string",
+                  "required": [true,"Please provide email first"],
+                  "unique": "true",
+                  "lowercase": "true",
+                  "validate":["isEmail","Please provide a valid email"]
+                  },
+                  "profile":{
+                   "name":{ "type": "string"},
+                   "bio":{ "type": "string"},
+                   "avatar":{ "type": "string"}
+                  },
+                 "password":{
+                  "type": "string",
+                  "required": [true,"Please provide email first"],
+                  "minLength": [6,"Must be at least 6 characters"]
+                  }
+                    
+               }
+             }
+           }
+      ],
+      "responses":{
+         "200": {
+             "description": "User updated successfully"
+           },
+           "404": {
+             "description": "User not found"
+           }
+      }
+    },
+    "delete":{
+      "summary": "Delete a user by ID",
+      "description": "Delete a user by ID",
+      "tags": ["Users"],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "ID of the user to be delete",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "User deleted"
+        },
+        "404": {
+          "description": "User not found"
+        }
+      }
+    }
+ },
+ "/user/findByname":{
+   "get":{
+    "summary": "Get a user by name",
+    "description": "Get a user by name",
+    "tags": ["Users"],
+    "parameters": [
+      {
+        "name": "name",
+        "in": "query",
+        "description": "name of the user to retrieve",
+        "required": true,
+        "type": "string"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Successful response"
+      },
+      "404": {
+        "description": "User not found"
+      }
+    }
+   }
+ },
+ "/user/findByRole":{
+   "get":{
+
+    "summary": "Get a user by role",
+        "description": "Get a user by role",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "role",
+            "in": "query",
+            "description": "Role of the user to retrieve",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+}
+ },
+ "/course/create":{
+  "post":{
+
+  }
+ },
+ "":{
+  "get":{
+    
+  }
+ }
+}
+}
+    
