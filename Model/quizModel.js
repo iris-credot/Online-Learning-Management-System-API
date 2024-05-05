@@ -2,10 +2,10 @@
 
 const mongoose = require('mongoose');
 
-const questionSchema = new mongoose.Schema({
-    questions: { type: String },
+// const questionSchema = new mongoose.Schema({
+//     questions: { type: String },
     
-});
+// });
 
 const quizSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
@@ -13,8 +13,8 @@ const quizSchema = new mongoose.Schema({
     description: { type: String, required: true },
     grade:{ type: String },
     course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true},
-    questions: {type: mongoose.Schema.Types.ObjectId, ref: 'QNS', required: true}, // Embedding questions within the quiz document
-    Newfile:{type:String},
+    //questions: {type: mongoose.Schema.Types.ObjectId, ref: 'QNS', required: true}, // Embedding questions within the quiz document
+    file:[{type:String}],
     due_date: { type: Date, required: true },
     // Add more fields as needed
 },{timestamps:true});
