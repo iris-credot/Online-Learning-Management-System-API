@@ -152,7 +152,7 @@ const authController ={
               return res.status(400).json({ error: 'Incorrect current password' });
           }
   
-        
+          user.password=newPassword;
   
           // Save the updated user object to the database
           await user.save();
