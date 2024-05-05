@@ -148,16 +148,63 @@ const authController ={
       }}),
 
    
-    logout_get: asyncWrapper(async (req, res, next) => {       
-     res.cookie('jwt','',{maxAge:1});
-     res.redirect('/');
-    }),
+      logout_get: asyncWrapper(async (req, res, next) => {       
+        console.log('Logout request received'); // Debug log
+        const token = req.headers.authorization;
+        
+        if (!token) {
+            return res.status(401).json({ error: 'Unauthorized: No token provided' });
+        }
+        const secret= process.env.SECRET_KEY;
+      
+        // Verify and decode the token
+        jwt.verify(token, secret, (err, decoded) => {
+            if (err) {
+                console.error('JWT Verification Error:', err); // Debug log
+                return res.status(401).json({ error: 'Unauthorized: Invalid token' });
+            } else {
+              const message = { message: 'Logged out successfully' };
+              console.log('Response:', message);
+                res.json(message);
+            }
+        });
+      }),
     deleteUser: asyncWrapper(async (req, res, next) => {
       const { id: userID } = req.query
       const user = await userModel.findOneAndDelete({ _id: userID })
      
       res.status(200).json({ user })
     }),
+    UpdatePassword :async (req, res) => {
+      const { currentPassword, newPassword } = req.body;
+      const userId = req.userId; // Assuming the user ID is retrieved from the authenticated user
+  
+      try {
+          // Find the user by ID
+          const user = await userModel.findById(userId);
+          if (!user) {
+              throw new Error('User not found');
+          }
+  
+          // Check if the current password matches the password stored in the database
+          const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+          if (!isPasswordValid) {
+              console.log('Incorrect current password provided');
+              return res.status(400).json({ error: 'Incorrect current password' });
+          }
+  
+        
+  
+          // Save the updated user object to the database
+          await user.save();
+  
+          console.log('Password updated successfully');
+          return res.json({ success: true, message: 'Password updated successfully' });
+      } catch (error) {
+          console.error('Error updating password:', error.message);
+          return res.status(500).json({ error: 'Internal server error' });
+      }
+  },
     getuserbyrole: asyncWrapper(async (req, res,next) => {
       const { role: role } = req.query
       const user = await userModel.findOne({ role: role });

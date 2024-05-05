@@ -41,6 +41,32 @@ app.use(cookieParser());
 // routes
 // app.get('*', checkUser);
 
+app.use((req, res, next) => {
+  if (req.path.startsWith('/course/create') || req.path.startsWith('/announce/create') || req.path.startsWith('/assign/create') || req.path.startsWith('/quiz/create') || req.path.startsWith('/grade/createGradeQuiz') || req.path.startsWith('/grade/createGradeAssig')) {
+    console.log('New upload detected:', req.path);
+    // Here you can add code to send a notification to users
+    if(req.path.startsWith('/course/create')){
+      console.log('New Course notification sent:', req.path);
+    }
+    if(req.path.startsWith('/announce/create')){
+      console.log('New Announcement notification sent:', req.path);
+    }
+    if(req.path.startsWith('/assign/create')){
+      console.log('New Assignment notification sent:', req.path);
+    }
+    if(req.path.startsWith('/quiz/create')){
+      console.log('New Quiz notification sent:', req.path);
+    }
+    if(req.path.startsWith('/grade/createGradeQuiz')){
+      console.log('New  Quiz Grades notification sent:', req.path);
+    }
+    if(req.path.startsWith('/grade/createGradeAssig')){
+      console.log('New  Assignment Grades notification sent:', req.path);
+    }
+    
+  }
+  next();
+});
+
 
 app.use('/', AllRoutes);
-

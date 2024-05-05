@@ -7,8 +7,8 @@ const submissionDeadlineMiddleware = async(req, res, next) => {
         // Fetch the quiz by ID
         const quizz = await QuizModel.findById(quiz);
         const assignmentt = await AssigModel.findById(assignment);
-        if (!quiz && !assignmentt) {
-            return res.status(404).json({ message: 'Quiz or assignment not found' });
+        if (!quiz && !assignmentt ) {
+            return res.status(404).json({ message: 'Quiz or assignment not found ' });
         }
        
         const currentDateTime = new Date();
