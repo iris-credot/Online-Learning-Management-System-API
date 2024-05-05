@@ -1,7 +1,9 @@
 const asyncWrapper = require('../middleware/async');
 const ContentModel= require('../Model/contentModel');
 const cloudinary =require('cloudinary');
-const path = require('path')
+const path = require('path');
+const Badrequest=require('../error/Badrequest');
+const Notfound=require('../error/Notfound');
 
 // const cloudinary = require('../cloudinary');
  
@@ -14,23 +16,23 @@ cloudinary.v2.config({
 const ContentController = {
   // Get all contacts
   
-  getAllContent: asyncWrapper(async (req, res) => {
+  getAllContent: asyncWrapper(async (req, res,next) => {
     const Content = await ContentModel.find({});
       res.json(Content);
     }),
   // Get a single contact by ID
-  getContent: asyncWrapper(async (req, res) => {
+  getContent: asyncWrapper(async (req, res,next) => {
     const { id } = req.params;
       const Content = await ContentModel.findById(id);
       if (!Content) {
-        return res.status(404).json({ message: 'Content not found' });
+        return next(new Notfound(`Content not found`));
       }
       res.json(Content);
   }),
 
   
-  createContent: async (req, res,next) => {
-    try {
+  createContent: asyncWrapper(async (req, res,next) => {
+    
       const { userId,course_id, type, title, description, order, ...otherFields} = req.body;
       const dateNow = Date.now();
       const fileName = `${title}_file_${dateNow}`;
@@ -76,26 +78,23 @@ const ContentController = {
     await newContent.save();
   
     res.status(201).json({Content:newContent});
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  },
-  deleteContent: asyncWrapper(async (req, res) => {
+ 
+  }),
+  deleteContent: asyncWrapper(async (req, res,next) => {
     const { id } = req.params;
       const deletedContent = await ContentModel.findByIdAndDelete(id);
       if (!deletedContent) {
-        return res.status(404).json({ message: 'Content not found' });
+        return next(new Notfound(`Content not found`));
       }
       res.json({ message: 'Content deleted successfully' });
   }),
-  updateContent: asyncWrapper(async (req, res) => {
+  updateContent: asyncWrapper(async (req, res,next) => {
     const { id } = req.params;
       const updatedContent = await ContentModel.findByIdAndUpdate(id, req.body, {
         new: true,
       });
       if (!updatedContent) {
-        return res.status(404).json({ message: 'Content not found' });
+        return next(new Notfound(`Content not found`));
       }
       res.json(updatedContent);
     

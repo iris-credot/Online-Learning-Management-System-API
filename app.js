@@ -6,6 +6,7 @@ const dotenv= require('dotenv');
 dotenv.config();
 const port = process.env.PORT ;
 const connection = process.env.MONGODB_URI ;
+const errorHandling = require('./middleware/error');
 const assert = require('assert');
 const swaggerUi=require ( 'swagger-ui-express') ;
 const swaggerjson= require ('./dos/swagger.json');
@@ -25,7 +26,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // view engine
+/*const corsOthers={
+    origin: [],
+    allowedHeaders:["Authorization","Content-Type"],
+    methods:["GET","POST","DELETE","PUT"]
+   
+}*/
 
+/*app.use(corsOther);*/
 // 'mongodb+srv://tetairiscredot:Niwenshuti250@cluster0.iu5ca8f.mongodb.net/Authentication-Project?retryWrites=true&w=majority&appName=Cluster0' ||
 // database connection
 
@@ -70,3 +78,4 @@ app.use((req, res, next) => {
 
 
 app.use('/', AllRoutes);
+app.use(errorHandling);

@@ -7,7 +7,7 @@ const  ContentController = require('../controllers/contentController');
 const multer = require('multer');
 
 const storage = multer.diskStorage({
-    destination: 'Contents/',
+    destination: 'Uploads/Contents/',
     filename: function (req, file, cb) {
         cb(null, file.originalname);
     }

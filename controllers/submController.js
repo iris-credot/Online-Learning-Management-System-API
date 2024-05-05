@@ -1,5 +1,7 @@
 const asyncWrapper = require('../middleware/async');
 const subModel= require('../Model/submissionModel');
+const Badrequest=require('../error/Badrequest');
+const Notfound=require('../error/Notfound');
 // Controller methods
 const cloudinary =require('cloudinary');
 const path = require('path')
@@ -13,36 +15,30 @@ cloudinary.v2.config({
 });
 const SubmController = {
   // Get all contacts
-  getAllSubs: asyncWrapper(async (req, res) => {
+  getAllSubs: asyncWrapper(async (req, res,next) => {
     const Subs = await subModel.find();
       res.json(Subs);
     }),
   // Get a single contact by ID
-  getSub: asyncWrapper(async (req, res) => {
+  getSub: asyncWrapper(async (req, res,next) => {
     const { id } = req.params;
       const Sub = await subModel.findById(id);
       if (!Sub) {
-        return res.status(404).json({ message: 'Submission not found' });
+        return next(new Notfound(`Submission not found`));
       }
       res.json(Sub);
   }),
 
   // Create a new contact
-  createSub: asyncWrapper(async (req, res) => {
+  createSub: asyncWrapper(async (req, res,next) => {
     // const newSub = new subModel(req.body);
     //   const savedSub = await newSub.save();
     //   res.status(201).json({submission:savedSub, message:"Submission successfully sent"});
-    try {
+    
       const { userId,course, quiz, assignment,title,url,grade, ...otherFields} = req.body;
       const dateNow = Date.now();
       const fileName = `${title}_file_${dateNow}`;
-      
-      
-      
           
-        
-
-        
           const fileoutname = req.file.path
           const fileType = getFileType(fileoutname);
             const cloudinaryResponse = await cloudinary.v2.uploader.upload(fileoutname, { folder: `Submission/${fileType}`, public_id: fileName });
@@ -80,26 +76,23 @@ const SubmController = {
     await newSub.save();
   
     res.status(201).json({Submission:newSub});
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
+  
   }),
-  deleteSub: asyncWrapper(async (req, res) => {
+  deleteSub: asyncWrapper(async (req, res,next) => {
     const { id } = req.params;
       const deletedSub = await subModel.findByIdAndDelete(id);
       if (!deletedSub) {
-        return res.status(404).json({ message: 'Submission not found' });
+        return next(new Notfound(`Submission not found`));
       }
       res.json({ message: 'Submission deleted successfully' });
   }),
-  updateSub: asyncWrapper(async (req, res) => {
+  updateSub: asyncWrapper(async (req, res,next) => {
     const { id } = req.params;
       const updatedSub = await SubModel.findByIdAndUpdate(id, req.body, {
         new: true,
       });
       if (!updatedSub) {
-        return res.status(404).json({ message: 'Submission not found' });
+        return next(new Notfound(`Submission not found`));
       }
       res.json(updatedSub);
     

@@ -8,10 +8,11 @@ const questionSchema = new mongoose.Schema({
 });
 
 const quizSchema = new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
     title: { type: String, required: true },
     description: { type: String, required: true },
-    course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
+    grade:{ type: String },
+    course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true},
     questions: {type: mongoose.Schema.Types.ObjectId, ref: 'QNS', required: true}, // Embedding questions within the quiz document
     Newfile:{type:String},
     due_date: { type: Date, required: true },

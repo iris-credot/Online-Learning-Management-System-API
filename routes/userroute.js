@@ -3,9 +3,9 @@ const Userrouter= express.Router();
 
 const auth = require('../middleware/authentication');
 const authController = require('../controllers/UserController');
+const validate= require('../middleware/validate')
 
-
-Userrouter.post('/signup', authController.signup_post);
+Userrouter.post('/signup',validate, authController.signup_post);
 Userrouter.post('/login', authController.login_post);
 Userrouter.get('/logout',auth.AuthJWT, authController.logout_get);
 Userrouter.post('/forgot', authController.ForgotPassword);

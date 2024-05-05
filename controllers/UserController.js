@@ -3,64 +3,17 @@ const userModel= require('../Model/userModel');
 const otpModel = require ('../Model/userotpModel' );
 const otpGenerator = require('otp-generator'); 
 const jwt = require('jsonwebtoken');
+const Badrequest=require('../error/Badrequest');
+const Notfound=require('../error/Notfound');
 const bcrypt = require('bcrypt');
+const UnauthorizedError =require('../error/unauthorised');
 const bcryptjs= require('bcryptjs');
 const sendEmail = require('../middleware/mail');
 
-//const maxAge = 3*24*60*60;
 
-// const createToken  = (id)=>{
-//  return jwt.sign({id},'my secret iris',{
-//     expiresIn:maxAge
-//  }); 
-// };
-// let transporter = nodemailer.createTransport({
-// service:"gmail",
-// auth:{
-//   user: process.env.AUTH_EMAIL,
-//   pass: process.env.AUTH_PASS
-// }
-// });
-// transporter.verify((error,success)=>{
-// if(error){
-//   console.log(error);
-// }
-// else{
-//   console.log('Message');
-// }
-// });
-// const sendOtpEmail= async ({_id,email}, res) => {
-//   const otp = `${Math.random() * 9000000}`;
- 
-
-//  const mailOptions = {
-//    from: process.env.AUTH_EMAIL,
-//    to: email,
-//    subject:"Verify your email please",
-//    html: `<p>Enter <b>${otp}</b>in the app to verify your email address and complete your Creation Process</p>`
-// };
-//  const saltRounds = 10;
-//  const hashOtp = await bcrypt.hash(otp, saltRounds);
-//  const newOtp = await new otpModel({
-//        userId:_id,
-//        otp: hashOtp,
-//        createdAt: Date.now(),
-//        ExpiredAt: Date.now() + 3600000,
-//  });
-//  await newOtp.save();
-//  await transporter.sendMail(mailOptions);
-//  res.json({
-//   status:"PENDING",
-//   message:"Verification otp mail sent successfully",
-//   data:{
-//    userId:_id,
-//    email
-//   }
-//  });
-// };
 const authController ={
     
-    getAllusers: asyncWrapper(async (req, res) => {
+    getAllusers: asyncWrapper(async (req, res,next) => {
 
       // idlogged = req.userId
       // rolelogged = req.role
@@ -74,7 +27,10 @@ const authController ={
       getuserbyId: asyncWrapper(async (req, res,next) => {
         const { id: userID } = req.params
         const user = await userModel.findOne({ _id: userID });
-        
+        if (!user) {
+          return next(new Notfound(`User not found`));
+      };
+  
         res.status(200).json({ user })
       }),
     
@@ -97,15 +53,31 @@ const authController ={
        }), 
  
     signup_post: asyncWrapper(async (req, res, next) => {
-      
-    
-       const newUser=req.body;       
+     // const{username,name,role,profile,email,password, last_login ,otpExpires}=req.body;
+      const foundUser = await userModel.findOne({ email: req.body.email });
+      if (foundUser) {
+          return next(new Badrequest("Email already in use"));
+      };
+      const otp = `${Math.random() * 9000000}`;
+      const otpExpirationDate = new Date().getTime() + (60 * 1000 * 5);
+      const newUser = new userModel({
+        username:req.body.username,
+        name:req.body.name,
+        role:req.body.role,
+        profile:
+          req.body.profile,
+        email:req.body.email,
+        password:req.body.password,
+        last_login:req.body.last_login,
+        otpExpires: otpExpirationDate,
+    });
+
+    const savedUser = await newUser.save();
         
-        const user = await userModel.create(newUser);
-     
+        await sendEmail(req.body.email, "Verify your account", `Your OTP is ${otp}`);
       // await sendOtpEmail(req.body.email,res);
         // Ensure this is the only response sent for this request
-        res.status(201).json(user);
+        res.status(201).json(savedUser);
      
      
     }),
@@ -113,38 +85,26 @@ const authController ={
     
     OTP: asyncWrapper(async(req,res,next) =>{
     
-      let {userId, otp} = req.body;
-      if(!userId || !otp){
-          res.json("Empty details not allowed");
+      const foundUser = await userModel.findOne({ otp: req.body.otp });
+      if (!foundUser) {
+          next(new UnauthorizedError('Authorization denied'));
+      };
+  
+      // Checking if the otp is expired or not.
+      if (foundUser.otpExpires < new Date().getTime()) {
+          next(new UnauthorizedError('OTP expired'));
       }
-      else{
-          const verific= await otpModel.find({
-              userId
+  
+      // Updating the user to verified
+      foundUser.verified = true;
+      const savedUser = await foundUser.save();
+  
+      if (savedUser) {
+          return res.status(201).json({
+              message: "User account verified!",
+              user: savedUser
           });
-          if(verific.length <=0){
-              res.json("Doesn't exist, Please sign up or login");
-          }
-          /*else{
-              const {expiresAt} = verific[0];
-              const hashOtp = verific[0].otp;
-          }*/
-          if(expiresAt < Date.now()){
-              await otpModel.deleteMany({userId});
-              res.json('Code has expired, Request agaiin')
-          }
-          else{
-              const validOtp = await bcrypt.compare(otp,hashOtp);
-              if(!validOtp){
-                  res.json('Invalid code Please');
-              }else{
-                  await userModel.updateOne({_id: userId},{verified:true});
-                  otpModel.deleteMany({userId});
-                  res.json({
-                      status: "VERIFIED",
-                      message:"User email verified"
-                  })
-              }
-          }
+      
       }}),
 
    
@@ -175,15 +135,15 @@ const authController ={
      
       res.status(200).json({ user })
     }),
-    UpdatePassword :async (req, res) => {
+    UpdatePassword :asyncWrapper(async (req, res,next) => {
       const { currentPassword, newPassword } = req.body;
       const userId = req.userId; // Assuming the user ID is retrieved from the authenticated user
   
-      try {
+      
           // Find the user by ID
           const user = await userModel.findById(userId);
           if (!user) {
-              throw new Error('User not found');
+            return next(new Notfound(`User not found`));
           }
   
           // Check if the current password matches the password stored in the database
@@ -200,31 +160,35 @@ const authController ={
   
           console.log('Password updated successfully');
           return res.json({ success: true, message: 'Password updated successfully' });
-      } catch (error) {
-          console.error('Error updating password:', error.message);
-          return res.status(500).json({ error: 'Internal server error' });
-      }
-  },
+      
+  }),
     getuserbyrole: asyncWrapper(async (req, res,next) => {
       const { role: role } = req.query
       const user = await userModel.findOne({ role: role });
-      
+      if (!user) {
+        return next(new Notfound(`Role not found`));
+      }
+
       res.status(200).json({ user })
     }),
     getuserbyname: asyncWrapper(async (req, res,next) => {
       const { name: name } = req.query
       const user = await userModel.findOne({ name: name });
-      
+      if (!user) {
+        return next(new Notfound(`Name not found`));
+      }
+
       res.status(200).json({ user })
     }),
-    updateUser: asyncWrapper(async (req, res) => {
+    updateUser: asyncWrapper(async (req, res,next) => {
       const { id } = req.params;
         const updatedUser = await userModel.findByIdAndUpdate(id, req.body, {
           new: true,
         });
         if (!updatedUser) {
-          return res.status(404).json({ message: 'User not found' });
+          return next(new Notfound(`User not found`));
         }
+
         res.json(updatedUser);
       
     }),
@@ -233,8 +197,9 @@ const authController ={
      
       const foundUser = await userModel.findOne({ email: req.body.email });
       if (!foundUser) {
-          return res.json({error:"Your email is not registered!"});
-      };
+        return next(new Notfound(`Your email is not registered`));
+      }
+
   
       // Generate token
       const token = jwt.sign({ id: foundUser.id }, process.env.SECRET_key, { expiresIn: "15m" });
@@ -256,43 +221,39 @@ const authController ={
       });
   }),
   ResetPassword: asyncWrapper(async (req, res, next) => {
+    const { email, token ,newPassword} = req.body; // Extract email and token from request body
+
+    console.log('Received email:', email);
+    // Verify token
     
-    const decoded = await jwt.verify(req.body.token, process.env.JWT_SECRET);
-    if (!decoded) {
-        return res.json({error:"Invalid token!"});
+    const user = await userModel.findOne({email});
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }const otpRecord = await otpModel.findOne(req.userId);
+    if (!otpRecord) {
+        return res.status(400).json({ message: 'Invalid or expired token' });
+    }
+console.log(req.body);
+    // Check if token is expired
+    if (otpRecord.expirationDate < new Date()) {
+        return res.status(400).json({ message: 'Token has expired' });
     }
 
-    const recordedToken = await otpModel.findOne({ token: req.body.token });
-    
-    if (decoded.id!= req.body.id || recordedToken.user!= req.body.id) {
-        return res.json({error:"Invalid token!"});
-    }
+    // Find the user by ID
+   
 
-    if (new Date(recordedToken.expirationDate).getTime() < new Date().getTime()) {
-        return res.json({error:"Token expired!"});
-    }
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
 
-    // Find user
-    const foundUser = await userModel.findById(req.body.id);
-    if (!foundUser) {
-        return res.json({error:"User not found!"});
-    };
+    // Update the user's password
+    user.password = hashedPassword;
+    await user.save();
 
-    // Deleting the user token
-    await otpModel.deleteOne({ token: req.body.token });
+    // Delete the OTP record from the database
+    await otpModel.deleteOne({ token });
 
-    // Harshing the user password
-    const hashedPassword = await bcryptjs.hashSync(req.body.password, 10);
-
-    // Updating the user password
-    foundUser.password = hashedPassword;
-
-    const savedUser = await foundUser.save();
-    if (savedUser) {
-        return res.status(200).json({
-            message: "Your password has been reset!",
-        })
-    }
+    // Respond with success message
+    return res.status(200).json({ message: 'Password reset successfully' });
 })
 }
 module.exports = authController

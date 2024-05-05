@@ -6,7 +6,7 @@ const dueDate= require('../middleware/submissionDeadline');
 const multer = require('multer');
 
 const storage = multer.diskStorage({
-    destination: 'Submissions/',
+    destination: 'Uploads/Submissions/',
     filename: function (req, file, cb) {
         cb(null, file.originalname);
     }

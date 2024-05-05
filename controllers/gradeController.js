@@ -2,29 +2,31 @@ const asyncWrapper = require('../middleware/async');
 const gradeModel= require('../Model/gradeModel');
 const QuizModel= require('../Model/quizModel');
 const AssigModel= require('../Model/assignmentModel');
+const Badrequest=require('../error/Badrequest');
+const Notfound=require('../error/Notfound');
 // Controller methods
 const gradeController = {
   // Get all contacts
-  getAllgrade: asyncWrapper(async (req, res) => {
+  getAllgrade: asyncWrapper(async (req, res,next) => {
     const Grades = await gradeModel.find();
       res.json(Grades);
     }),
   // Get a single contact by ID
-  getgrade: asyncWrapper(async (req, res) => {
+  getgrade: asyncWrapper(async (req, res,next) => {
     const { id } = req.params;
       const Grade = await gradeModel.findById(id);
       if (!Grade) {
-        return res.status(404).json({ message: 'Grade not found' });
+        return next(new Notfound(`Grade not found`));
       }
       res.json(Sub);
   }),
 
   // Create a new contact
-  createGradeAssign: asyncWrapper(async (req, res) => {
+  createGradeAssign: asyncWrapper(async (req, res,next) => {
     // const newGra = new gradeModel(req.body);
     //   const savedGra = await newGra.save();
     //   res.status(201).json(savedGra);
-    try {
+    
       const { assignmentId ,grade} = req.body;
      
 
@@ -32,7 +34,7 @@ const gradeController = {
       const assignment = await AssigModel.findById(assignmentId);
 
       if (!assignment) {
-          return res.status(404).json({ message: 'Assignment not found' });
+        return next(new Notfound(`Assignment not found`));
       }
 
       // Update the grade
@@ -42,16 +44,13 @@ const gradeController = {
       await assignment.save();
 
       res.status(200).json({ message: 'Assignment grade updated successfully', assignment });
-  } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Internal server error' });
-  }
+ 
   }),
-  createGradeQuiz: asyncWrapper(async (req, res) => {
+  createGradeQuiz: asyncWrapper(async (req, res,next) => {
     // const newGra = new gradeModel(req.body);
     //   const savedGra = await newGra.save();
     //   res.status(201).json(savedGra);
-    try {
+    
       const { quizId ,grade} = req.body;
      
 
@@ -59,7 +58,7 @@ const gradeController = {
       const quiz = await QuizModel.findById(quizId);
 
       if (!quiz) {
-          return res.status(404).json({ message: 'Quiz not found' });
+        return next(new Notfound(`Quiz not found`));
       }
 
       // Update the grade
@@ -69,26 +68,23 @@ const gradeController = {
       await quiz.save();
 
       res.status(200).json({ message: 'Quiz grade updated successfully', quiz });
-  } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Internal server error' });
-  }
+  
   }),
-  deletegrade: asyncWrapper(async (req, res) => {
+  deletegrade: asyncWrapper(async (req, res,next) => {
     const { id } = req.params;
       const deletedGra = await gradeModel.findByIdAndDelete(id);
       if (!deletedGra) {
-        return res.status(404).json({ message: 'Grade not found' });
+        return next(new Notfound(`Grade not found`));
       }
       res.json({ message: 'Grade deleted successfully' });
   }),
-  updategrade: asyncWrapper(async (req, res) => {
+  updategrade: asyncWrapper(async (req, res,next) => {
     const { id } = req.params;
       const updatedgrade = await gradeModel.findByIdAndUpdate(id, req.body, {
         new: true,
       });
       if (!updatedgrade) {
-        return res.status(404).json({ message: 'grade not found' });
+        return next(new Notfound(`Grade not found`));
       }
       res.json(updatedgrade);
     

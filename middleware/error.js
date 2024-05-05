@@ -1,15 +1,32 @@
-const handleErrors = (err)=>{
-    console.log(err.message, err.code);
-    let errors ={email:'', password:''};
-    if(err.code === 11000){
-        errors.email ='The email already exists';
-        return errors;
+const ErrorHandlerMiddleware = (err, req, res, next) => {
+    let errStatus = err.statusCode || 500;
+    let errMessage = err.message || "Internal Server Error";
+    
+    if (err.name === 'ValidationError') {
+        errMessage = Object.values(err.errors)
+        .map(err => err.message)
+        .join(',');
+        errStatus = 400;
     }
-    if(err.message.includes('user validation failed')){
-        object.values(err.errors).array.forEach(({properties}) => {
-           errors[properties.path] =properties.properties; 
-        });
+
+    if (err.code && err.code === 11000) {
+        errMessage = `Duplicate value entered for ${Object.keys(err.keyValue)} field, please choose another value`;
+        errStatus = 400;
     }
-    return errors;
-}
-module.exports = handleErrors;
+
+    if (err.name === 'Cast Error') {
+        errMessage = `No item found with id: ${err.value}`
+        errStatus = 404;
+    }
+
+    console.log(errMessage);
+
+    res.status(errStatus).json({
+        success: false,
+        status: errStatus,
+        message: errMessage,
+        stack: process.env.NODE_ENV === "development" ? err.stack : {}
+    });
+};
+
+module.exports= ErrorHandlerMiddleware;

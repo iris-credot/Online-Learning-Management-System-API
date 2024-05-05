@@ -4,8 +4,7 @@ const bcrypt = require('bcrypt');
 const joi = require('joi');
 const userSchema = new mongoose.Schema({
   username: { 
-      type: String, 
-      required: true 
+      type: String
   },
   name: {
       type: String,
@@ -39,6 +38,7 @@ const userSchema = new mongoose.Schema({
       required: [true, 'Please provide password'],
       minLength: [6, 'Must be at least 6 characters']
   },
+  otpExpires:{type:String},
   last_login: { type: Date }
 }, { timestamps: true });
 
