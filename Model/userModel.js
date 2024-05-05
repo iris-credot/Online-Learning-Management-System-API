@@ -39,6 +39,11 @@ const userSchema = new mongoose.Schema({
       minLength: [6, 'Must be at least 6 characters']
   },
   otpExpires:{type:String},
+  otp: {
+    type: String, // Assuming OTP is stored as a string
+    required: true // Ensure OTP is always provided
+},
+  verified:{type:Boolean,default:false },
   last_login: { type: Date }
 }, { timestamps: true });
 

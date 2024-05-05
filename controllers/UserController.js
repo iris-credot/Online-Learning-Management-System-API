@@ -15,11 +15,7 @@ const authController ={
     
     getAllusers: asyncWrapper(async (req, res,next) => {
 
-      // idlogged = req.userId
-      // rolelogged = req.role
-      // namelogged = req.name
-
-      // console.log(idlogged, rolelogged, namelogged);
+      
 
         const users = await userModel.find({})
         res.status(200).json({ users })
@@ -58,8 +54,8 @@ const authController ={
       if (foundUser) {
           return next(new Badrequest("Email already in use"));
       };
-      const otp = `${Math.random() * 9000000}`;
-      const otpExpirationDate = new Date().getTime() + (60 * 1000 * 5);
+      const otp =  Math.floor(Math.random() * 9000000);;
+      const otpExpirationDate = new Date(Date.now() + 5 * 60 * 1000); 
       const newUser = new userModel({
         username:req.body.username,
         name:req.body.name,
@@ -68,16 +64,17 @@ const authController ={
           req.body.profile,
         email:req.body.email,
         password:req.body.password,
+        otp: otp,
         last_login:req.body.last_login,
         otpExpires: otpExpirationDate,
     });
 
     const savedUser = await newUser.save();
-        
-        await sendEmail(req.body.email, "Verify your account", `Your OTP is ${otp}`);
+        const body=`Your OTP is ${otp}`;
+        await sendEmail(req.body.email, "Verify your account",body );
       // await sendOtpEmail(req.body.email,res);
         // Ensure this is the only response sent for this request
-        res.status(201).json(savedUser);
+        res.status(200).json({ user: savedUser, otp: otp });
      
      
     }),
@@ -91,6 +88,8 @@ const authController ={
       };
   
       // Checking if the otp is expired or not.
+      console.log('otpExpires:', new Date(foundUser.otpExpires));
+      console.log('Current time:', new Date());
       if (foundUser.otpExpires < new Date().getTime()) {
           next(new UnauthorizedError('OTP expired'));
       }
