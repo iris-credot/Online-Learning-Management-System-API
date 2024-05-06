@@ -2,7 +2,7 @@
   {
     "swagger":"2.0",
     "info":{
-        "title":"Authentication Project",
+        "title":"Learning Management System API",
         "description":"API documentation for Authentication Project",
         "version":"1.0.0"
     },
@@ -1365,44 +1365,37 @@
                               "summary": "Create a new Submission",
                               "description":"Create a new Submission and add it to the database",
                               "tags":["Submissions"],
+                              "consumes": ["multipart/form-data"],
                               "security":[
                                 {
                               "Bearer":[]
                                  }
                       ],
-                              "parameters":[{
-                                "name":"body",
-                                "in":"body",
-                                "description":"  Submission details",
-                                "required":"true",
-                                "schema":{
-                                    "type":"object",
-                                    "properties":{
-                                     
-                                      "quizId": {
-                                        "type": "string",
-                                        "description": "The ObjectId of the quiz to which the submission belongs",
-                                        "example": "609879f16836050e184a0db3",
-                                        "required": true
-                                      },
-                                      "user": {
-                                        "type": "string",
-                                        "description": "The ObjectId of the user who submitted the assignment/quiz",
-                                        "example": "609879f16836050e184a0db3",
-                                        "required": true
-                                      },
-                                      "files": {
-                                        "type": "array",
-                                        "description": "Array of attached files",
-                                        "items": {
-                                          "type": "string",
-                                          "format": "binary",
-                                          "description": "Binary data of the file"
-                                        }}               
-                                    
-                                
-                              }}
-                            }],
+                      "parameters": [
+                        {
+                          "name": "quizId",
+                          "in": "formData",
+                          "type": "string",
+                          "description": "The ObjectId of the quiz to which the submission belongs",
+                          "example": "609879f16836050e184a0db3",
+                          "required": true
+                        },
+                        {
+                          "name": "user",
+                          "in": "formData",
+                          "type": "string",
+                          "description": "The ObjectId of the user who submitted the assignment/quiz",
+                          "example": "609879f16836050e184a0db3",
+                          "required": true
+                        },
+                        {
+                          "name": "files",
+                            "in": "formData",
+                            "description": "Array of attached files",
+                            "type": "file",
+                          "required": true
+                        }
+                      ],
                             "responses":{
                               "201": {
                                   "description":  "Submission of quiz created"
@@ -1418,44 +1411,36 @@
                                 "summary": "Create a new Submission",
                                 "description":"Create a new Submission and add it to the database",
                                 "tags":["Submissions"],
+                                "consumes": ["multipart/form-data"],
                                 "security":[
                                   {
                                 "Bearer":[]
                                    }
                         ],
-                                "parameters":[{
-                                  "name":"body",
-                                  "in":"body",
-                                  "description":"  Submission details",
-                                  "required":"true",
-                                  "schema":{
-                                      "type":"object",
-                                      "properties":{
-                                        "assignmentId": {
-                                          "type": "string",
-                                          "description": "The ObjectId of the assignment to which the submission belongs",
-                                          "example": "609879f16836050e184a0db3",
-                                          "required": true
-                                        },
-                                        
-                                        "user": {
-                                          "type": "string",
-                                          "description": "The ObjectId of the user who submitted the assignment/quiz",
-                                          "example": "609879f16836050e184a0db3",
-                                          "required": true
-                                        },
-                                        "files": {
-                                          "type": "array",
-                                          "description": "Array of attached files",
-                                          "items": {
-                                            "type": "string",
-                                            "format": "binary",
-                                            "description": "Binary data of the file"
-                                          }}               
-                                      
-                                  
-                                }}
-                              }],
+                        "parameters": [
+                          {
+                            "name": "assignmentId",
+                            "in": "formData",
+                            "type": "string",
+                            "description": "The ObjectId of the assignment to which the submission belongs",
+                            "example": "609879f16836050e184a0db3",
+                            "required": true
+                          },
+                          {
+                            "name": "user",
+                            "in": "formData",
+                            "type": "string",
+                            "description": "The ObjectId of the user who submitted the assignment/quiz",
+                            "example": "609879f16836050e184a0db3",
+                            "required": true
+                          },
+                          {
+                            "name": "files",
+                            "in": "formData",
+                            "type": "file",
+                            "description": "Array of attached files"
+                          }
+                        ],
                               "responses":{
                                 "201": {
                                     "description":  "Submission of quiz created"
@@ -1471,57 +1456,57 @@
                                 "summary": "Update a new Submission",
                                 "description":"Update a new Submission and add it to the database",
                                 "tags":["Submissions"],
+                                "consumes": ["multipart/form-data"],
                                 "security":[
                                   {
                                 "Bearer":[]
                                    }
                         ],
-                                "parameters":[{
-                                  "name":"id",
-                                  "in":"path",
-                                  "description":"ID of the Submission to update",
-                                  "required":"true",
-                                  "type":"string"
-                                  },
-                                  {
-                                      "name": "body",
-                                      "in": "body",
-                                      "description": "Submission details",
-                                      "required": true,
-                                      "schema": {
-                                        "type": "object",
-                                        "properties": {
-                                          "assignmentId": {
-                                            "type": "string",
-                                            "description": "The ObjectId of the assignment to which the submission belongs",
-                                            "example": "609879f16836050e184a0db3",
-                                            "required": true
-                                          },
-                                          "quizId": {
-                                            "type": "string",
-                                            "description": "The ObjectId of the quiz to which the submission belongs",
-                                            "example": "609879f16836050e184a0db3",
-                                            "required": true
-                                          },
-                                          "user": {
-                                            "type": "string",
-                                            "description": "The ObjectId of the user who submitted the assignment/quiz",
-                                            "example": "609879f16836050e184a0db3",
-                                            "required": true
-                                          },
-                                          "files": {
-                                            "type": "array",
-                                            "description": "Array of attached files",
-                                            "items": {
-                                              "type": "string",
-                                              "format": "binary",
-                                              "description": "Binary data of the file"
-                                            }}
-                                             
-                                        }
-                                      }
-                                    }
-                               ],
+                        "parameters": [
+                          {
+                            "name": "id",
+                            "in": "path",
+                            "description": "ID of the Submission to update",
+                            "required": true,
+                            "type": "string"
+                          },
+                          {
+                            "name": "assignmentId",
+                            "in": "formData",
+                            "description": "The ObjectId of the assignment to which the submission belongs",
+                            "type": "string",
+                            "example": "609879f16836050e184a0db3",
+                            "required": true
+                          },
+                          {
+                            "name": "quizId",
+                            "in": "formData",
+                            "description": "The ObjectId of the quiz to which the submission belongs",
+                            "type": "string",
+                            "example": "609879f16836050e184a0db3",
+                            "required": true
+                          },
+                          {
+                            "name": "user",
+                            "in": "formData",
+                            "description": "The ObjectId of the user who submitted the assignment/quiz",
+                            "type": "string",
+                            "example": "609879f16836050e184a0db3",
+                            "required": true
+                          },
+                          {
+                            "name": "files",
+                            "in": "formData",
+                            "description": "Array of attached files",
+                            "type": "array",
+                            "items": {
+                              "type": "file",
+                              "format": "binary",
+                              "description": "Binary data of the file"
+                            },
+                            "required": true
+                          }
+                        ],
                               "responses":{
                                 "201": {
                                     "description": "Submission Updated"
@@ -1616,63 +1601,57 @@
                                     "summary": "Create a new Quiz",
                                     "description":"Create a new Quiz and add it to the database",
                                     "tags":["Quizs"],
+                                    "consumes": ["multipart/form-data"],
                                     "security":[
                                       {
                                     "Bearer":[]
                                        }
                             ],
-                                    "parameters":[{
-                                      "name":"body",
-                                      "in":"body",
-                                      "description":" Quiz details",
-                                      "required":"true",
-                                      "schema":{
-                                          "type":"object",
-                                          "properties":{
-                                            "userId": {
-                                              "type": "string",
-                                              "description": "The ObjectId of the user who created the quiz",
-                                              "example": "609879f16836050e184a0db3",
-                                              "required": true
-                                            },
-                                            "title": {
-                                              "type": "string",
-                                              "description": "The title of the quiz",
-                                              "example": "Quiz 1",
-                                              "required": true
-                                            },
-                                            "description": {
-                                              "type": "string",
-                                              "description": "The description of the quiz",
-                                              "example": "Description of Quiz 1",
-                                              "required": true
-                                            },
-                                            
-                                            "course": {
-                                              "type": "string",
-                                              "description": "The ObjectId of the course to which the quiz belongs",
-                                              "example": "609879f16836050e184a0db3",
-                                              "required": true
-                                            },
-                                            "file": {
-                                              "type": "array",
-                                              "description": "Array of attached files",
-                                              "items": {
-                                                "type": "string",
-                                                "format": "binary",
-                                                "description": "Binary data of the file"
-                                              }
-                                            },
-                                            "due_date": {
-                                              "type": "string",
-                                              "format": "date-time",
-                                              "description": "The due date of the quiz",
-                                              "example": "2024-05-10T00:00:00Z",
-                                              "required": true
-                                            }
-                                      
-                                    }}
-                                  }],
+                            "parameters": [
+                              {
+                                "name": "userId",
+                                "in": "formData",
+                                "description": "The ObjectId of the user who created the quiz",
+                                "type": "string",
+                                "required": true
+                              },
+                              {
+                                "name": "title",
+                                "in": "formData",
+                                "description": "The title of the quiz",
+                                "type": "string",
+                                "required": true
+                              },
+                              {
+                                "name": "description",
+                                "in": "formData",
+                                "description": "The description of the quiz",
+                                "type": "string",
+                                "required": true
+                              },
+                              {
+                                "name": "course",
+                                "in": "formData",
+                                "description": "The ObjectId of the course to which the quiz belongs",
+                                "type": "string",
+                                "required": true
+                              },
+                              {
+                                "name": "files",
+                                "in": "formData",
+                                "description": "Array of attached files",
+                                "type": "file",
+                              "required": true
+                              },
+                              {
+                                "name": "due_date",
+                                "in": "formData",
+                                "description": "The due date of the quiz",
+                                "type": "string",
+                                "format": "date-time",
+                                "required": true
+                              }
+                            ],
                                   "responses":{
                                     "201": {
                                         "description":  "Quiz was created"
@@ -1688,77 +1667,75 @@
                                       "summary": "Update a new Quiz",
                                       "description":"Update a new Quiz and add it to the database",
                                       "tags":["Quizs"],
+                                      "consumes": ["multipart/form-data"],
                                       "security":[
                                         {
                                       "Bearer":[]
                                          }
                               ],
-                                      "parameters":[{
-                                        "name":"id",
-                                        "in":"path",
-                                        "description":"ID of the Quiz to update",
-                                        "required":"true",
-                                        "type":"string"
-                                        },
-                                        {
-                                            "name": "body",
-                                            "in": "body",
-                                            "description": "Quiz details",
-                                            "required": true,
-                                            "schema": {
-                                              "type": "object",
-                                              "properties": {
-                                                "userId": {
-                                                  "type": "string",
-                                                  "description": "The ObjectId of the user who created the quiz",
-                                                  "example": "609879f16836050e184a0db3",
-                                                  "required": true
-                                                },
-                                                "title": {
-                                                  "type": "string",
-                                                  "description": "The title of the quiz",
-                                                  "example": "Quiz 1",
-                                                  "required": true
-                                                },
-                                                "description": {
-                                                  "type": "string",
-                                                  "description": "The description of the quiz",
-                                                  "example": "Description of Quiz 1",
-                                                  "required": true
-                                                },
-                                                "grade": {
-                                                  "type": "string",
-                                                  "description": "The grade of the quiz",
-                                                  "example": "A",
-                                                  "required": false
-                                                },
-                                                "course": {
-                                                  "type": "string",
-                                                  "description": "The ObjectId of the course to which the quiz belongs",
-                                                  "example": "609879f16836050e184a0db3",
-                                                  "required": true
-                                                },
-                                                "file": {
-                                                  "type": "array",
-                                                  "description": "Array of attached files",
-                                                  "items": {
-                                                    "type": "string",
-                                                    "format": "binary",
-                                                    "description": "Binary data of the file"
-                                                  }
-                                                },
-                                                "due_date": {
-                                                  "type": "string",
-                                                  "format": "date-time",
-                                                  "description": "The due date of the quiz",
-                                                  "example": "2024-05-10T00:00:00Z",
-                                                  "required": true
-                                                }
-                                                   
-                                              }
-                                            }
-                                          }
-                                     ],
+                              "parameters": [
+                                {
+                                  "name": "id",
+                                  "in": "path",
+                                  "description": "ID of the Quiz to update",
+                                  "required": true,
+                                  "type": "string"
+                                },
+                                {
+                                  "name": "userId",
+                                  "in": "formData",
+                                  "type": "string",
+                                  "description": "The ObjectId of the user who created the quiz",
+                                  "example": "609879f16836050e184a0db3",
+                                  "required": true
+                                },
+                                {
+                                  "name": "title",
+                                  "in": "formData",
+                                  "type": "string",
+                                  "description": "The title of the quiz",
+                                  "example": "Quiz 1",
+                                  "required": true
+                                },
+                                {
+                                  "name": "description",
+                                  "in": "formData",
+                                  "type": "string",
+                                  "description": "The description of the quiz",
+                                  "example": "Description of Quiz 1",
+                                  "required": true
+                                },
+                                {
+                                  "name": "grade",
+                                  "in": "formData",
+                                  "type": "string",
+                                  "description": "The grade of the quiz",
+                                  "example": "A"
+                                },
+                                {
+                                  "name": "course",
+                                  "in": "formData",
+                                  "type": "string",
+                                  "description": "The ObjectId of the course to which the quiz belongs",
+                                  "example": "609879f16836050e184a0db3",
+                                  "required": true
+                                },
+                                {
+                                  "name": "file",
+                                  "in": "formData",
+                                  "type": "file",
+                                  "description": "Array of attached files"
+                                },
+                                {
+                                  "name": "due_date",
+                                  "in": "formData",
+                                  "type": "string",
+                                  "format": "date-time",
+                                  "description": "The due date of the quiz",
+                                  "example": "2024-05-10T00:00:00Z",
+                                  "required": true
+                                }
+                              ],
                                     "responses":{
                                       "201": {
                                           "description": "Quiz Updated"
@@ -1851,60 +1828,56 @@
                                             "summary": "Create a new Assignment",
                                             "description":"Create a new Assignment and add it to the database",
                                             "tags":["Assignments"],
+                                            "consumes": ["multipart/form-data"],
                                             "security":[
                                               {
                                             "Bearer":[]
                                                }
+                                                 ],
+                                    
+                                    "parameters": [
+                                      {
+                                        "name": "userId",
+                                        "in": "formData",
+                                        "description": "The ObjectId of the user who created the assignment",
+                                        "type": "string",
+                                        "required": true
+                                      },
+                                      {
+                                        "name": "title",
+                                        "in": "formData",
+                                        "description": "The title of the assignment",
+                                        "type": "string",
+                                        "required": true
+                                      },
+                                      {
+                                        "name": "description",
+                                        "in": "formData",
+                                        "description": "The description of the assignment",
+                                        "type": "string"
+                                      },
+                                      {
+                                        "name": "files",
+                                        "in": "formData",
+                                        "description": "Array of attached files",
+                                        "type": "file",
+                                      "required": true
+                                      },
+                                      {
+                                        "name": "due_date",
+                                        "in": "formData",
+                                        "description": "The due date of the assignment",
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "required": true
+                                      },
+                                      {
+                                        "name": "course",
+                                        "in": "formData",
+                                        "description": "The ObjectId of the course to which the assignment belongs",
+                                        "type": "string"
+                                      }
                                     ],
-                                            "parameters":[{
-                                              "name":"body",
-                                              "in":"body",
-                                              "description":" Assignment details",
-                                              "required":"true",
-                                              "schema":{
-                                                "userId": {
-                                                  "type": "string",
-                                                  "description": "The ObjectId of the user who created the assignment",
-                                                  "example": "609879f16836050e184a0db3",
-                                                  "required": true
-                                                },
-                                                "title": {
-                                                  "type": "string",
-                                                  "description": "The title of the assignment",
-                                                  "example": "Assignment 1",
-                                                  "required": true
-                                                },
-                                                "description": {
-                                                  "type": "string",
-                                                  "description": "The description of the assignment",
-                                                  "example": "Description of Assignment 1"
-                                                },
-                                                "file": {
-                                                  "type": "array",
-                                                  "description": "Array of attached files",
-                                                  "items": {
-                                                    "type": "string",
-                                                    "format": "binary",
-                                                    "description": "Binary data of the file",
-                                                    "required": true
-                                                  }
-                                                },
-                                                
-                                                "due_date": {
-                                                  "type": "string",
-                                                  "format": "date-time",
-                                                  "description": "The due date of the assignment",
-                                                  "example": "2024-05-10T00:00:00Z",
-                                                  "required": true
-                                                },
-                                                "course": {
-                                                  "type": "string",
-                                                  "description": "The ObjectId of the course to which the assignment belongs",
-                                                  "example": "609879f16836050e184a0db3"
-                                                }
-                                              
-                                            }
-                                          }],
                                           "responses":{
                                             "201": {
                                                 "description":  "Assignment was created"
@@ -1920,74 +1893,73 @@
                                               "summary": "Update a new Assignment",
                                               "description":"Update a new Assignment and add it to the database",
                                               "tags":["Assignments"],
+                                              "consumes": ["multipart/form-data"],
                                               "security":[
                                                 {
                                               "Bearer":[]
                                                  }
                                       ],
-                                              "parameters":[{
-                                                "name":"id",
-                                                "in":"path",
-                                                "description":"ID of the Assignment to update",
-                                                "required":"true",
-                                                "type":"string"
-                                                },
-                                                {
-                                                    "name": "body",
-                                                    "in": "body",
-                                                    "description": "Quiz details",
-                                                    "required": true,
-                                                    "schema": {
-                                                      "type": "object",
-                                                      "properties": {
-                                                        "userId": {
-                                                          "type": "string",
-                                                          "description": "The ObjectId of the user who created the assignment",
-                                                          "example": "609879f16836050e184a0db3",
-                                                          "required": true
-                                                        },
-                                                        "title": {
-                                                          "type": "string",
-                                                          "description": "The title of the assignment",
-                                                          "example": "Assignment 1",
-                                                          "required": true
-                                                        },
-                                                        "description": {
-                                                          "type": "string",
-                                                          "description": "The description of the assignment",
-                                                          "example": "Description of Assignment 1"
-                                                        },
-                                                        "file": {
-                                                          "type": "array",
-                                                          "description": "Array of attached files",
-                                                          "items": {
-                                                            "type": "string",
-                                                            "format": "binary",
-                                                            "description": "Binary data of the file",
-                                                            "required": true
-                                                          }
-                                                        },
-                                                        "grade": {
-                                                          "type": "string",
-                                                          "description": "The grade of the assignment"
-                                                        },
-                                                        "due_date": {
-                                                          "type": "string",
-                                                          "format": "date-time",
-                                                          "description": "The due date of the assignment",
-                                                          "example": "2024-05-10T00:00:00Z",
-                                                          "required": true
-                                                        },
-                                                        "course": {
-                                                          "type": "string",
-                                                          "description": "The ObjectId of the course to which the assignment belongs",
-                                                          "example": "609879f16836050e184a0db3"
-                                                        }
-                                                           
-                                                      }
-                                                    }
-                                                  }
-                                             ],
+                                      "parameters": [
+                                        {
+                                          "name": "id",
+                                          "in": "path",
+                                          "description": "ID of the Assignment to update",
+                                          "required": true,
+                                          "type": "string"
+                                        },
+                                        {
+                                          "name": "userId",
+                                          "in": "formData",
+                                          "type": "string",
+                                          "description": "The ObjectId of the user who created the assignment",
+                                          "example": "609879f16836050e184a0db3",
+                                          "required": true
+                                        },
+                                        {
+                                          "name": "title",
+                                          "in": "formData",
+                                          "type": "string",
+                                          "description": "The title of the assignment",
+                                          "example": "Assignment 1",
+                                          "required": true
+                                        },
+                                        {
+                                          "name": "description",
+                                          "in": "formData",
+                                          "type": "string",
+                                          "description": "The description of the assignment",
+                                          "example": "Description of Assignment 1"
+                                        },
+                                        {
+                                          "name": "file",
+                                          "in": "formData",
+                                          "type": "file",
+                                          "description": "Array of attached files",
+                                          "required": true
+                                        },
+                                        {
+                                          "name": "grade",
+                                          "in": "formData",
+                                          "type": "string",
+                                          "description": "The grade of the assignment"
+                                        },
+                                        {
+                                          "name": "due_date",
+                                          "in": "formData",
+                                          "type": "string",
+                                          "format": "date-time",
+                                          "description": "The due date of the assignment",
+                                          "example": "2024-05-10T00:00:00Z",
+                                          "required": true
+                                        },
+                                        {
+                                          "name": "course",
+                                          "in": "formData",
+                                          "type": "string",
+                                          "description": "The ObjectId of the course to which the assignment belongs",
+                                          "example": "609879f16836050e184a0db3"
+                                        }
+                                      ],
                                             "responses":{
                                               "201": {
                                                   "description": "Assignment Updated"
@@ -2079,60 +2051,60 @@
                                               "summary": "Create a new Content",
                                               "description":"Create a new Content and add it to the database",
                                               "tags":["Contents"],
+                                              "consumes": ["multipart/form-data"],
                                               "security":[
                                                 {
                                               "Bearer":[]
                                                  }
                                       ],
-                                              "parameters":[{
-                                                "name":"body",
-                                                "in":"body",
-                                                "description":" Content details",
-                                                "required":"true",
-                                                "schema":{
-                                                    "type":"object",
-                                                    "properties":{
-                                                      "userId": {
-                                                        "type": "string",
-                                                        "description": "The ObjectId of the user who created the content",
-                                                        "example": "609879f16836050e184a0db3",
-                                                        "required": true
-                                                      },
-                                                      "course_id": {
-                                                        "type": "string",
-                                                        "description": "The ObjectId of the course to which the content belongs",
-                                                        "example": "609879f16836050e184a0db3",
-                                                        "required": true
-                                                      },
-                                                      "type": {
-                                                        "type": "string",
-                                                        "description": "The type of the content",
-                                                        "example": "lecture",
-                                                        "required": true
-                                                      },
-                                                      "title": {
-                                                        "type": "string",
-                                                        "description": "The title of the content"
-                                                      },
-                                                      "description": {
-                                                        "type": "string",
-                                                        "description": "The description of the content"
-                                                      },
-                                                      "file": {
-                                                        "type": "array",
-                                                        "description": "Array of file paths",
-                                                        "items": {
-                                                          "type": "string",
-                                                          "description": "Path to the file"
-                                                        }
-                                                      },
-                                                      "order": {
-                                                        "type": "integer",
-                                                        "description": "The order of the content within the course"
-                                                      }
-                                                
-                                              }}
-                                            }],
+                                      "parameters": [
+                                        {
+                                          "name": "userId",
+                                          "in": "formData",
+                                          "description": "The ObjectId of the user who created the content",
+                                          "type": "string",
+                                          "required": true
+                                        },
+                                        {
+                                          "name": "course_id",
+                                          "in": "formData",
+                                          "description": "The ObjectId of the course to which the content belongs",
+                                          "type": "string",
+                                          "required": true
+                                        },
+                                        {
+                                          "name": "type",
+                                          "in": "formData",
+                                          "description": "The type of the content",
+                                          "type": "string",
+                                          "required": true
+                                        },
+                                        {
+                                          "name": "title",
+                                          "in": "formData",
+                                          "description": "The title of the content",
+                                          "type": "string"
+                                        },
+                                        {
+                                          "name": "description",
+                                          "in": "formData",
+                                          "description": "The description of the content",
+                                          "type": "string"
+                                        },
+                                        {
+                                          "name": "files",
+                                          "in": "formData",
+                                          "description": "Array of attached files",
+                                          "type": "file",
+                                        "required": true
+                                        },
+                                        {
+                                          "name": "order",
+                                          "in": "formData",
+                                          "description": "The order of the content within the course",
+                                          "type": "integer"
+                                        }
+                                      ],
                                             "responses":{
                                               "201": {
                                                   "description":  "Content was created"
@@ -2148,69 +2120,70 @@
                                                 "summary": "Update a new Content",
                                                 "description":"Update a new Content and add it to the database",
                                                 "tags":["Contents"],
+                                                "consumes": ["multipart/form-data"],
                                                 "security":[
                                                   {
                                                 "Bearer":[]
                                                    }
                                         ],
-                                                "parameters":[{
-                                                  "name":"id",
-                                                  "in":"path",
-                                                  "description":"ID of the Content to update",
-                                                  "required":"true",
-                                                  "type":"string"
-                                                  },
-                                                  {
-                                                      "name": "body",
-                                                      "in": "body",
-                                                      "description": "Content details",
-                                                      "required": true,
-                                                      "schema": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                          "userId": {
-                                                            "type": "string",
-                                                            "description": "The ObjectId of the user who created the content",
-                                                            "example": "609879f16836050e184a0db3",
-                                                            "required": true
-                                                          },
-                                                          "course_id": {
-                                                            "type": "string",
-                                                            "description": "The ObjectId of the course to which the content belongs",
-                                                            "example": "609879f16836050e184a0db3",
-                                                            "required": true
-                                                          },
-                                                          "type": {
-                                                            "type": "string",
-                                                            "description": "The type of the content",
-                                                            "example": "lecture",
-                                                            "required": true
-                                                          },
-                                                          "title": {
-                                                            "type": "string",
-                                                            "description": "The title of the content"
-                                                          },
-                                                          "description": {
-                                                            "type": "string",
-                                                            "description": "The description of the content"
-                                                          },
-                                                          "file": {
-                                                            "type": "array",
-                                                            "description": "Array of file paths",
-                                                            "items": {
-                                                              "type": "string",
-                                                              "description": "Path to the file"
-                                                            }
-                                                          },
-                                                          "order": {
-                                                            "type": "integer",
-                                                            "description": "The order of the content within the course"
-                                                          }
-                                                             
-                                                        }
-                                                      }
-                                                    }
-                                               ],
+                                        "parameters": [
+                                          {
+                                            "name": "id",
+                                            "in": "path",
+                                            "description": "ID of the Content to update",
+                                            "required": true,
+                                            "type": "string"
+                                          },
+                                          {
+                                            "name": "userId",
+                                            "in": "formData",
+                                            "type": "string",
+                                            "description": "The ObjectId of the user who created the content",
+                                            "example": "609879f16836050e184a0db3",
+                                            "required": true
+                                          },
+                                          {
+                                            "name": "course_id",
+                                            "in": "formData",
+                                            "type": "string",
+                                            "description": "The ObjectId of the course to which the content belongs",
+                                            "example": "609879f16836050e184a0db3",
+                                            "required": true
+                                          },
+                                          {
+                                            "name": "type",
+                                            "in": "formData",
+                                            "type": "string",
+                                            "description": "The type of the content",
+                                            "example": "lecture",
+                                            "required": true
+                                          },
+                                          {
+                                            "name": "title",
+                                            "in": "formData",
+                                            "type": "string",
+                                            "description": "The title of the content"
+                                          },
+                                          {
+                                            "name": "description",
+                                            "in": "formData",
+                                            "type": "string",
+                                            "description": "The description of the content"
+                                          },
+                                          {
+                                            "name": "file",
+                                            "in": "formData",
+                                            "type": "file",
+                                            "description": "Array of file paths",
+                                            "required": true
+                                          },
+                                          {
+                                            "name": "order",
+                                            "in": "formData",
+                                            "type": "integer",
+                                            "description": "The order of the content within the course"
+                                          }
+                                        ],
                                               "responses":{
                                                 "201": {
                                                     "description": "Content Updated"

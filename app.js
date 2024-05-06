@@ -9,13 +9,13 @@ const connection = process.env.MONGODB_URI ;
 const errorHandling = require('./middleware/error');
 const assert = require('assert');
 const swaggerUi=require ( 'swagger-ui-express') ;
-const swaggerjson= require ('./dos/swagger.json');
+const swaggerjson= require ('./docs/swagger.json');
 assert.strictEqual(typeof swaggerjson, 'object');
 
 const AllRoutes = require('./routes/index');
 
 const cookieParser = require('cookie-parser');
-const  requireAuth = require('./middleware/authentication');
+
 
 const app = express();
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerjson));

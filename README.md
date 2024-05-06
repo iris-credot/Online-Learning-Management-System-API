@@ -12,6 +12,21 @@ This is a brief overview of the LMS (Learning Management System) API, which prov
 - **bcrypt**: A library for hashing passwords before storing them in the database.
 - **validator**: A library for validating and sanitizing strings.
 - **joi**: A library for validating input data.
+- **Cloudinary**: Used it to upload documents, images etc
+
+## Key Features:
+
+1. Course Management: Create, update, retrieve, and delete courses with detailed information such as title, description, and instructor.
+2. User Management: Manage user accounts, including registration, authentication, and authorization, as well as profile information.
+3. Assignment and Quiz Handling: Create assignments and quizzes, set deadlines, attach files, and grade submissions.
+4. Submission Management: Handle student submissions for assignments and quizzes, including file uploads and grading.
+5. Content Management: Organize learning materials such as lectures, videos, and documents within courses.
+6. Security: Implement secure authentication mechanisms such as JWT (JSON Web Tokens) for user authorization and access control.
+7. Discussions and Replys among users.
+8. Grading the Assignments and quizs.
+9. Restricted inappropriate content and submission after the deadline.
+10. Updating Password of  the user and sending emails.
+
 
 ## Setup Instructions
 
