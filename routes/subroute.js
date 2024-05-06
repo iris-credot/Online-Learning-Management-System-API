@@ -14,7 +14,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 const auth = require('../middleware/authentication');
 
-Subrouter.post('/create', upload.single('file'),dueDate,auth.AuthJWT,SubController.createSub);
+Subrouter.post('/createQuiz', upload.single('file'),dueDate,auth.AuthJWT,SubController.createSub);
+Subrouter.post('/createAssign', upload.single('file'),dueDate,auth.AuthJWT,SubController.createSub);
 Subrouter.get('/all',auth.AuthJWT  ,SubController.getAllSubs);
 Subrouter.get('/getOne/:id',auth.AuthJWT,  SubController.getSub);
 Subrouter.delete('/delete/:id', auth.AuthJWT, SubController.deleteSub);

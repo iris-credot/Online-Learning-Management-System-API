@@ -12,7 +12,7 @@ const quizSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
     grade:{ type: String },
-    course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true},
+    course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course'},
     //questions: {type: mongoose.Schema.Types.ObjectId, ref: 'QNS', required: true}, // Embedding questions within the quiz document
     file:[{type:String}],
     due_date: { type: Date, required: true },

@@ -18,9 +18,9 @@ const cookieParser = require('cookie-parser');
 const  requireAuth = require('./middleware/authentication');
 
 const app = express();
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerjson));
-// middleware
-app.use(express.static('public'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerjson));
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -34,7 +34,7 @@ app.use(cookieParser());
 }*/
 
 /*app.use(corsOther);*/
-// 'mongodb+srv://tetairiscredot:Niwenshuti250@cluster0.iu5ca8f.mongodb.net/Authentication-Project?retryWrites=true&w=majority&appName=Cluster0' ||
+
 // database connection
 
 

@@ -7,7 +7,14 @@
         "version":"1.0.0"
     },
     "schemes":["http","https"],
-
+     "securityDefinitions":{
+     "Bearer":{
+      "type":"apiKey",
+      "name":"Authorization",
+      "in":"header",
+      "description":"Enter the token for authorization"
+     }
+     },
     "paths":{
       "/api/user/signup":{
       "post":{
@@ -30,18 +37,13 @@
                      "type": "string",
                      "required": [true,"Please provide email first"]
                   },
-                  "profile": {
-                    "names": { "type": "String" },
-                    "bio": { "type": "String" },
-                    "avatar": { "type": "String" }
-                },
+                 
                   "role": {
                     "type": "String",
                     "enum": ["student", "admin"],
                     "default": "student"
                 },
-                 "otpExpires":{"type":"String"},
-                 "otp":{"type":"String", "required": [true,"Please provide email first"]},
+              
                  "verified":{"type":"Boolean","default":false },
                   "email":{
                   "type": "string",
@@ -54,8 +56,8 @@
                   "type": "string",
                   "required": [true,"Please provide email first"],
                   "minLength": [6,"Must be at least 6 characters"]
-                  },
-                  "last_login": { "type": "Date" }
+                  }
+                  
                     
               }
           }
@@ -114,10 +116,15 @@
        }
       }},
     "/api/user/logout":{
-      "post":{
+      "get":{
         "summary": "Log out a user",
         "description": "End the user session.",
-        "tags":["Authentication"],
+        "tags":["Users"],
+        "security":[
+          {
+        "Bearer":[]
+           }
+],
         "responses": {
           "200": {
             "description": "Logout successful."
@@ -132,24 +139,6 @@
         "summary": "Request forgot password",
         "description": "Forgot Password.",
         "tags":["Authentication"],
-        "parameters":[{
-          "name":"body",
-          "in":"body",
-          "description":"User details",
-          "required":"true",
-          "schema":{
-              "type":"object",
-              "properties":{
-                  "email":{
-                 "type": "string",
-                  "required": [true,"Please provide email first"],
-                  "unique": "true",
-                  "lowercase": "true",
-                  "validate":["isEmail","Please provide a valid email"]
-                  }                    
-              }
-          }
-      }],
       "responses": {
         "200": {
           "description": "Password reset link sent."
@@ -182,7 +171,12 @@
                   "type": "string",
                   "required": [true,"Please provide password first"],
                   "minLength": [6,"Must be at least 6 characters"]
-                  }
+                  },
+                  "token":{
+                    "type": "string",
+                    "required": [true,"Please provide token first"]
+                   
+                    }
                     
               }
           }
@@ -201,6 +195,11 @@
       "summary":"Get all users",
       "description":"All users",
       "tags":["Users"],
+      "security":[
+        {
+      "Bearer":[]
+         }
+],
       "responses":{
           "200":{
               "description":"A list of all users"
@@ -215,6 +214,11 @@
         "summary": "Get a user by ID",
         "description": "Get a user by ID",
         "tags": ["Users"],
+        "security":[
+          {
+        "Bearer":[]
+           }
+],
         "parameters": [
           {
             "name": "id",
@@ -238,6 +242,11 @@
         "summary": "Get a user by name",
         "description": "Get a user by name",
         "tags": ["Users"],
+        "security":[
+          {
+        "Bearer":[]
+           }
+],
         "parameters": [
           {
             "name": "name",
@@ -261,6 +270,11 @@
       "summary": "Get a user by role",
       "description": "Get a user by role",
       "tags": ["Users"],
+      "security":[
+        {
+      "Bearer":[]
+         }
+],
       "parameters": [
         {
           "name": "role",
@@ -284,6 +298,11 @@
         "summary": "Delete a user by ID",
         "description": "Delete a user by ID",
         "tags": ["Users"],
+        "security":[
+          {
+        "Bearer":[]
+           }
+],
         "parameters": [
           {
             "name": "id",
@@ -302,11 +321,16 @@
           }
         }
     }},
-    "/put/{id}":{
+    "/api/user/put/{id}":{
       "put":{
         "summary":"Update a user by ID",
       "description":"Update an existing user in the database",
       "tags":["Users"],
+      "security":[
+        {
+      "Bearer":[]
+         }
+],
       "parameters":[{
          "name":"id",
          "in":"path",
@@ -375,6 +399,11 @@
       "put":{
         "summary": "Update user's password (Authenticated user)",
         "tags":["Users"],
+        "security":[
+          {
+        "Bearer":[]
+           }
+],
         "parameters":[{
           "name":"id",
           "in":"path",
@@ -454,6 +483,11 @@
       "summary":"Get all courses",
       "description":"All coursess",
       "tags":["Courses"],
+      "security":[
+                {
+              "Bearer":[]
+                 }
+      ],
       "responses":{
           "200":{
               "description":"A list of all courses"
@@ -468,6 +502,11 @@
       "summary": "Get a course by ID",
       "description": "Get a course by ID",
       "tags": ["Courses"],
+      "security":[
+        {
+      "Bearer":[]
+         }
+],
       "parameters": [
         {
           "name": "id",
@@ -491,6 +530,11 @@
     "summary": "Delete a course by ID",
     "description": "Delete a course by ID",
     "tags": ["Courses"],
+    "security":[
+      {
+    "Bearer":[]
+       }
+],
     "parameters": [
       {
         "name": "id",
@@ -513,6 +557,11 @@
       "summary": "Register a new course",
       "description":"Create a new course and add it to the database",
       "tags":["Courses"],
+      "security":[
+        {
+      "Bearer":[]
+         }
+],
       "parameters":[{
         "name":"body",
         "in":"body",
@@ -560,6 +609,11 @@
         "summary":"Update a course by ID",
         "description":"Update an existing course in the database",
         "tags":["Courses"],
+        "security":[
+          {
+        "Bearer":[]
+           }
+],
         "parameters":[{
            "name":"id",
            "in":"path",
@@ -614,6 +668,11 @@
             "summary":"Get all announcements",
             "description":"All announcements",
             "tags":["Announcements"],
+            "security":[
+              {
+            "Bearer":[]
+               }
+    ],
             "responses":{
                 "200":{
                     "description":"A list of all announcements"
@@ -628,6 +687,11 @@
             "summary": "Get an announcement by ID",
             "description": "Get an announcementby ID",
             "tags": ["Announcements"],
+            "security":[
+              {
+            "Bearer":[]
+               }
+    ],
             "parameters": [
               {
                 "name": "id",
@@ -651,6 +715,11 @@
             "summary": "Delete an announcement by ID",
             "description": "Delete an announcement by ID",
             "tags": ["Announcements"],
+            "security":[
+              {
+            "Bearer":[]
+               }
+    ],
             "parameters": [
               {
                 "name": "id",
@@ -673,6 +742,11 @@
               "summary": "Create a new announcement",
               "description":"Create a new announcementand add it to the database",
               "tags":["Announcements"],
+              "security":[
+                {
+              "Bearer":[]
+                 }
+      ],
               "parameters":[{
                 "name":"body",
                 "in":"body",
@@ -725,6 +799,11 @@
                 "summary": "Update a new announcement",
                 "description":"Update a new announcementand add it to the database",
                 "tags":["Announcements"],
+                "security":[
+                  {
+                "Bearer":[]
+                   }
+        ],
                 "parameters":[{
                   "name":"id",
                   "in":"path",
@@ -780,7 +859,1445 @@
                     "description": "There was an error processing your request. Please try again later."
                   } 
             }
-              }}
+              }},
+
+
+              "/api/disc/create":{
+                "post":{
+                  "summary": "Create a new discussion",
+                  "description":"Create a new discussion and add it to the database",
+                  "tags":[" Discussions"],
+                  "security":[
+                    {
+                  "Bearer":[]
+                     }
+          ],
+                  "parameters":[{
+                    "name":"body",
+                    "in":"body",
+                    "description":" discussion details",
+                    "required":"true",
+                    "schema":{
+                        "type":"object",
+                        "properties":{
+                          "title": {
+                            "type": "string",
+                            "description": "The title of the discussion",
+                            "example": "New Discussion Title",
+                            "required": true
+                          },
+                          "content": {
+                            "type": "string",
+                            "description": "The content of the discussion",
+                            "example": "Discussion content goes here",
+                            "required": true
+                          },
+                          "author": {
+                            "type": "string",
+                            "description": "The ObjectId of the user who created the discussion",
+                            "example": "609879f16836050e184a0db3",
+                            "required": true
+                          }
+                  }}
+                }],
+                "responses":{
+                  "201": {
+                      "description":  "discussion created"
+                    },
+                    "403": {
+                      "description": "An  discussion with this email already exists."
+                    },
+                    "500": {
+                      "description": "There was an error processing your request. Please try again later."
+                    } 
+              }
+                }},
+                "/api/disc/createReply/{id}":{
+                  "post":{
+                    "summary": "Create a new Reply to discussion",
+                    "description":"Create a new Reply to discussion and add it to the database",
+                    "tags":[" Discussions"],
+                    "security":[
+                      {
+                    "Bearer":[]
+                       }
+            ],
+                    "parameters":[{
+                      "name":"id",
+                      "in":"path",
+                      "description":"ID of the Discussion to update",
+                      "required":"true",
+                      "type":"string"
+                      },
+                      {
+                      "name":"body",
+                      "in":"body",
+                      "description":" Reply  details",
+                      "required":"true",
+                      "schema":{
+                          "type":"object",
+                          "properties":{
+                            "title": {
+                              "type": "string",
+                              "description": "The title of the discussion",
+                              "example": "New Discussion Title",
+                              "required": true
+                            },
+                            "content": {
+                              "type": "string",
+                              "description": "The content of the discussion",
+                              "example": "Discussion content goes here",
+                              "required": true
+                            },
+                            "author": {
+                              "type": "string",
+                              "description": "The ObjectId of the user who created the discussion",
+                              "example": "609879f16836050e184a0db3",
+                              "required": true
+                            }
+                    }}
+                  }],
+                  "responses":{
+                    "201": {
+                        "description":  "Reply to discussion created"
+                      },
+                      "403": {
+                        "description": "An Reply to discussion with this email already exists."
+                      },
+                      "500": {
+                        "description": "There was an error processing your request. Please try again later."
+                      } 
+                }
+                  }},
+                "/api/disc/put/{id}":{
+                  "put":{
+                    "summary": "Update a new Discussion",
+                    "description":"Update a new Discussion and add it to the database",
+                    "tags":[" Discussions"],
+                    "security":[
+                      {
+                    "Bearer":[]
+                       }
+            ],
+                    "parameters":[{
+                      "name":"id",
+                      "in":"path",
+                      "description":"ID of the Discussion to update",
+                      "required":"true",
+                      "type":"string"
+                      },
+                      {
+                          "name": "body",
+                          "in": "body",
+                          "description": "Announcement details",
+                          "required": true,
+                          "schema": {
+                            "type": "object",
+                            "properties": {
+                              "title": {
+                                "type": "string",
+                                "description": "The title of the discussion",
+                                "example": "New Discussion Title",
+                                "required": true
+                              },
+                              "content": {
+                                "type": "string",
+                                "description": "The content of the discussion",
+                                "example": "Discussion content goes here",
+                                "required": true
+                              },
+                              "author": {
+                                "type": "string",
+                                "description": "The ObjectId of the user who created the discussion",
+                                "example": "609879f16836050e184a0db3",
+                                "required": true
+                              }
+                                 
+                            }
+                          }
+                        }
+                   ],
+                  "responses":{
+                    "201": {
+                        "description": "Discussion Updated"
+                      },
+                      "403": {
+                        "description": "A Discussion with this email already exists."
+                      },
+                      "500": {
+                        "description": "There was an error processing your request. Please try again later."
+                      } 
+                }
+                  }},
+                  "/api/disc/delete/{id}":{
+                    "delete":{
+                      "summary": "Delete a discussion by ID",
+                      "description": "Delete a discussion by ID",
+                      "tags": [" Discussions"],
+                      "security":[
+                        {
+                      "Bearer":[]
+                         }
+              ],
+                      "parameters": [
+                        {
+                          "name": "id",
+                          "in": "path",
+                          "description": "ID of the discussion to be delete",
+                          "required": true,
+                          "type": "string"
+                        }
+                      ],
+                      "responses": {
+                        "204": {
+                          "description": "discussion deleted"
+                        },
+                        "404": {
+                          "description": "User not found"
+                        }}
+                    }},
+                    "/api/disc/getOne/{id}":{
+                    "get":{
+                      "summary": "Get a discussion by ID",
+                      "description": "Get an discussion by ID",
+                      "tags": [" Discussions"],
+                      "security":[
+                        {
+                      "Bearer":[]
+                         }
+              ],
+                      "parameters": [
+                        {
+                          "name": "id",
+                          "in": "path",
+                          "description": "ID of the discussion to retrieve",
+                          "required": true,
+                          "type": "string"
+                        }
+                      ],
+                      "responses": {
+                        "200": {
+                          "description": "Successful response"
+                        },
+                        "404": {
+                          "description": "Course not found"
+                        }
+                      }
+                  }},
+                  "/api/disc/all":{
+                    "get":{
+                        "summary":"Get all discussions",
+                        "description":"All discussions",
+                        "tags":[" Discussions"],
+                        "security":[
+                          {
+                        "Bearer":[]
+                           }
+                ],
+                        "responses":{
+                            "200":{
+                                "description":"A list of all discussions"
+                            },
+                            "400":{
+                                "description":"OPPS......Something went wrong"
+                            }  
+                        }
+                   }},
+
+                   "/api/grade/createGradeQuiz":{
+                    "post":{
+                      "summary": "Create a new grade of quiz",
+                      "description":"Create a new grade of quiz and add it to the database",
+                      "tags":[" Grades"],
+                      "security":[
+                        {
+                      "Bearer":[]
+                         }
+              ],
+                      "parameters":[{
+                        "name":"body",
+                        "in":"body",
+                        "description":" grade of quiz details",
+                        "required":"true",
+                        "schema":{
+                            "type":"object",
+                            "properties":{
+                              
+                            
+                              "quizId": {
+                                "type": "string",
+                                "description": "The ObjectId of the quiz to which the grade belongs",
+                                "example": "609879f16836050e184a0db3"
+                              },
+                              "grade": {
+                                "type": "number",
+                                "description": "The grade value",
+                                "example": 95,
+                                "required": true
+                              },
+                              "graded_by": {
+                                "type": "string",
+                                "description": "The ObjectId of the user who graded the assignment/quiz",
+                                "example": "609879f16836050e184a0db3",
+                                "required": true
+                              
+                                  }
+                                                              
+                            
+                        
+                      }}
+                    }],
+                    "responses":{
+                      "201": {
+                          "description":  "grade of quiz created"
+                        },
+                        "403": {
+                          "description": "An  grade of quiz with this email already exists."
+                        },
+                        "500": {
+                          "description": "There was an error processing your request. Please try again later."
+                        } 
+                  }
+                    }},
+                    "/api/grade/createGradeAssig":{
+                      "post":{
+                        "summary": "Create a new grade of assignment",
+                        "description":"Create a new grade of assignment and add it to the database",
+                        "tags":[" Grades"],
+                        "security":[
+                          {
+                        "Bearer":[]
+                           }
+                ],
+                        "parameters":[{
+                          "name":"body",
+                          "in":"body",
+                          "description":" grade of assignment details",
+                          "required":"true",
+                          "schema":{
+                              "type":"object",
+                              "properties":{
+                                
+                                "assignmentId": {
+                                  "type": "string",
+                                  "description": "The ObjectId of the assignment to which the grade belongs",
+                                  "example": "609879f16836050e184a0db3"
+                                },
+                               
+                                "grade": {
+                                  "type": "number",
+                                  "description": "The grade value",
+                                  "example": 95,
+                                  "required": true
+                                },
+                                "graded_by": {
+                                  "type": "string",
+                                  "description": "The ObjectId of the user who graded the assignment/quiz",
+                                  "example": "609879f16836050e184a0db3",
+                                  "required": true
+                                
+                                    }
+                                                                
+                              
+                          
+                        }}
+                      }],
+                      "responses":{
+                        "201": {
+                            "description":  "grade of assignment  created"
+                          },
+                          "403": {
+                            "description": "An  grade of assignment with this email already exists."
+                          },
+                          "500": {
+                            "description": "There was an error processing your request. Please try again later."
+                          } 
+                    }
+                      }},
+                      "/api/grade/delete/{id}":{
+                        "delete":{
+                          "summary": "Delete a grade by ID",
+                          "description": "Delete a grade by ID",
+                          "tags": [" Grades"],
+                          "security":[
+                            {
+                          "Bearer":[]
+                             }
+                  ],
+                          "parameters": [
+                            {
+                              "name": "id",
+                              "in": "path",
+                              "description": "ID of the grade to be delete",
+                              "required": true,
+                              "type": "string"
+                            }
+                          ],
+                          "responses": {
+                            "204": {
+                              "description": "grade deleted"
+                            },
+                            "404": {
+                              "description": "User not found"
+                            }}
+                        }},
+                        "/api/grade/all":{
+                          "get":{
+                              "summary":"Get all grades",
+                              "description":"All grades",
+                              "tags":[" Grades"],
+                              "security":[
+                                {
+                              "Bearer":[]
+                                 }
+                      ],
+                              "responses":{
+                                  "200":{
+                                      "description":"A list of all grades"
+                                  },
+                                  "400":{
+                                      "description":"OPPS......Something went wrong"
+                                  }  
+                              }
+                         }},
+                         "/api/grade/getOne/{id}":{
+                          "get":{
+                            "summary": "Get a grade by ID",
+                            "description": "Get an  grade by ID",
+                            "tags": [" Grades"],
+                            "security":[
+                              {
+                            "Bearer":[]
+                               }
+                    ],
+                            "parameters": [
+                              {
+                                "name": "id",
+                                "in": "path",
+                                "description": "ID of the  grade to retrieve",
+                                "required": true,
+                                "type": "string"
+                              }
+                            ],
+                            "responses": {
+                              "200": {
+                                "description": "Successful response"
+                              },
+                              "404": {
+                                "description": " grade not found"
+                              }
+                            }
+                        }},
+                        "/api/grade/put/{id}":{
+                          "put":{
+                            "summary": "Update a new grade",
+                            "description":"Update a new grade and add it to the database",
+                            "tags":[" Grades"],
+                            "security":[
+                              {
+                            "Bearer":[]
+                               }
+                    ],
+                            "parameters":[{
+                              "name":"id",
+                              "in":"path",
+                              "description":"ID of the grade to update",
+                              "required":"true",
+                              "type":"string"
+                              },
+                              {
+                                  "name": "body",
+                                  "in": "body",
+                                  "description": "grade details",
+                                  "required": true,
+                                  "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                      "course": {
+                                        "type": "string",
+                                        "description": "The ObjectId of the course to which the grade belongs",
+                                        "example": "609879f16836050e184a0db3",
+                                        "required": true
+                                      },
+                                      "assignmentId": {
+                                        "type": "string",
+                                        "description": "The ObjectId of the assignment to which the grade belongs",
+                                        "example": "609879f16836050e184a0db3"
+                                      },
+                                      "quizId": {
+                                        "type": "string",
+                                        "description": "The ObjectId of the quiz to which the grade belongs",
+                                        "example": "609879f16836050e184a0db3"
+                                      },
+                                      "grade": {
+                                        "type": "number",
+                                        "description": "The grade value",
+                                        "example": 95,
+                                        "required": true
+                                      },
+                                      "graded_by": {
+                                        "type": "string",
+                                        "description": "The ObjectId of the user who graded the assignment/quiz",
+                                        "example": "609879f16836050e184a0db3",
+                                        "required": true
+                                      
+                                          }
+                                         
+                                    }
+                                  }
+                                }
+                           ],
+                          "responses":{
+                            "201": {
+                                "description": "grade Updated"
+                              },
+                              "403": {
+                                "description": "A grade with this email already exists."
+                              },
+                              "500": {
+                                "description": "There was an error processing your request. Please try again later."
+                              } 
+                        }
+                          }},
+
+                          "/api/sub/createQuiz":{
+                            "post":{
+                              "summary": "Create a new Submission",
+                              "description":"Create a new Submission and add it to the database",
+                              "tags":["Submissions"],
+                              "security":[
+                                {
+                              "Bearer":[]
+                                 }
+                      ],
+                              "parameters":[{
+                                "name":"body",
+                                "in":"body",
+                                "description":"  Submission details",
+                                "required":"true",
+                                "schema":{
+                                    "type":"object",
+                                    "properties":{
+                                     
+                                      "quizId": {
+                                        "type": "string",
+                                        "description": "The ObjectId of the quiz to which the submission belongs",
+                                        "example": "609879f16836050e184a0db3",
+                                        "required": true
+                                      },
+                                      "user": {
+                                        "type": "string",
+                                        "description": "The ObjectId of the user who submitted the assignment/quiz",
+                                        "example": "609879f16836050e184a0db3",
+                                        "required": true
+                                      },
+                                      "files": {
+                                        "type": "array",
+                                        "description": "Array of attached files",
+                                        "items": {
+                                          "type": "string",
+                                          "format": "binary",
+                                          "description": "Binary data of the file"
+                                        }}               
+                                    
+                                
+                              }}
+                            }],
+                            "responses":{
+                              "201": {
+                                  "description":  "Submission of quiz created"
+                                },
+                               
+                                "500": {
+                                  "description": "There was an error processing your request. Please try again later."
+                                } 
+                          }
+                            }},
+                            "/api/sub/createAssign":{
+                              "post":{
+                                "summary": "Create a new Submission",
+                                "description":"Create a new Submission and add it to the database",
+                                "tags":["Submissions"],
+                                "security":[
+                                  {
+                                "Bearer":[]
+                                   }
+                        ],
+                                "parameters":[{
+                                  "name":"body",
+                                  "in":"body",
+                                  "description":"  Submission details",
+                                  "required":"true",
+                                  "schema":{
+                                      "type":"object",
+                                      "properties":{
+                                        "assignmentId": {
+                                          "type": "string",
+                                          "description": "The ObjectId of the assignment to which the submission belongs",
+                                          "example": "609879f16836050e184a0db3",
+                                          "required": true
+                                        },
+                                        
+                                        "user": {
+                                          "type": "string",
+                                          "description": "The ObjectId of the user who submitted the assignment/quiz",
+                                          "example": "609879f16836050e184a0db3",
+                                          "required": true
+                                        },
+                                        "files": {
+                                          "type": "array",
+                                          "description": "Array of attached files",
+                                          "items": {
+                                            "type": "string",
+                                            "format": "binary",
+                                            "description": "Binary data of the file"
+                                          }}               
+                                      
+                                  
+                                }}
+                              }],
+                              "responses":{
+                                "201": {
+                                    "description":  "Submission of quiz created"
+                                  },
+                                 
+                                  "500": {
+                                    "description": "There was an error processing your request. Please try again later."
+                                  } 
+                            }
+                              }},
+                            "/api/sub/put/{id}":{
+                              "put":{
+                                "summary": "Update a new Submission",
+                                "description":"Update a new Submission and add it to the database",
+                                "tags":["Submissions"],
+                                "security":[
+                                  {
+                                "Bearer":[]
+                                   }
+                        ],
+                                "parameters":[{
+                                  "name":"id",
+                                  "in":"path",
+                                  "description":"ID of the Submission to update",
+                                  "required":"true",
+                                  "type":"string"
+                                  },
+                                  {
+                                      "name": "body",
+                                      "in": "body",
+                                      "description": "Submission details",
+                                      "required": true,
+                                      "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                          "assignmentId": {
+                                            "type": "string",
+                                            "description": "The ObjectId of the assignment to which the submission belongs",
+                                            "example": "609879f16836050e184a0db3",
+                                            "required": true
+                                          },
+                                          "quizId": {
+                                            "type": "string",
+                                            "description": "The ObjectId of the quiz to which the submission belongs",
+                                            "example": "609879f16836050e184a0db3",
+                                            "required": true
+                                          },
+                                          "user": {
+                                            "type": "string",
+                                            "description": "The ObjectId of the user who submitted the assignment/quiz",
+                                            "example": "609879f16836050e184a0db3",
+                                            "required": true
+                                          },
+                                          "files": {
+                                            "type": "array",
+                                            "description": "Array of attached files",
+                                            "items": {
+                                              "type": "string",
+                                              "format": "binary",
+                                              "description": "Binary data of the file"
+                                            }}
+                                             
+                                        }
+                                      }
+                                    }
+                               ],
+                              "responses":{
+                                "201": {
+                                    "description": "Submission Updated"
+                                  },
+                                  "403": {
+                                    "description": "A Submission with this email already exists."
+                                  },
+                                  "500": {
+                                    "description": "There was an error processing your request. Please try again later."
+                                  } 
+                            }
+                              }},
+                              "/api/sub/all":{
+                                "get":{
+                                    "summary":"Get all Submissions",
+                                    "description":"All Submissions",
+                                    "tags":["Submissions"],
+                                    "security":[
+                                      {
+                                    "Bearer":[]
+                                       }
+                            ],
+                                    "responses":{
+                                        "200":{
+                                            "description":"A list of all Submissions"
+                                        },
+                                        "400":{
+                                            "description":"OPPS......Something went wrong"
+                                        }  
+                                    }
+                    
+                               }},
+                               "/api/sub/getOne/{id}":{
+                                "get":{
+                                    "summary": "Get a Submission by ID",
+                                    "description": "Get a Submission by ID",
+                                    "tags": ["Submissions"],
+                                    "security":[
+                                      {
+                                    "Bearer":[]
+                                       }
+                            ],
+                                    "parameters": [
+                                      {
+                                        "name": "id",
+                                        "in": "path",
+                                        "description": "ID of the Submission to retrieve",
+                                        "required": true,
+                                        "type": "string"
+                                      }
+                                    ],
+                                    "responses": {
+                                      "200": {
+                                        "description": "Successful response"
+                                      },
+                                      "404": {
+                                        "description": "Submission not found"
+                                      }
+                                    }
+                                }},
+                                "/api/sub/delete/{id}":{
+                                "delete":{
+                                  "summary": "Delete asubmission by ID",
+                                  "description": "Delete a asubmission by ID",
+                                  "tags": ["Submissions"],
+                                  "security":[
+                                    {
+                                  "Bearer":[]
+                                     }
+                          ],
+                                  "parameters": [
+                                    {
+                                      "name": "id",
+                                      "in": "path",
+                                      "description": "ID of the submission to be delete",
+                                      "required": true,
+                                      "type": "string"
+                                    }
+                                  ],
+                                  "responses": {
+                                    "204": {
+                                      "description": "submission deleted"
+                                    },
+                                    "404": {
+                                      "description": "submission not found"
+                                    }
+                                  }
+                                }},
+
+                                "/api/quiz/create":{
+                                  "post":{
+                                    "summary": "Create a new Quiz",
+                                    "description":"Create a new Quiz and add it to the database",
+                                    "tags":["Quizs"],
+                                    "security":[
+                                      {
+                                    "Bearer":[]
+                                       }
+                            ],
+                                    "parameters":[{
+                                      "name":"body",
+                                      "in":"body",
+                                      "description":" Quiz details",
+                                      "required":"true",
+                                      "schema":{
+                                          "type":"object",
+                                          "properties":{
+                                            "userId": {
+                                              "type": "string",
+                                              "description": "The ObjectId of the user who created the quiz",
+                                              "example": "609879f16836050e184a0db3",
+                                              "required": true
+                                            },
+                                            "title": {
+                                              "type": "string",
+                                              "description": "The title of the quiz",
+                                              "example": "Quiz 1",
+                                              "required": true
+                                            },
+                                            "description": {
+                                              "type": "string",
+                                              "description": "The description of the quiz",
+                                              "example": "Description of Quiz 1",
+                                              "required": true
+                                            },
+                                            
+                                            "course": {
+                                              "type": "string",
+                                              "description": "The ObjectId of the course to which the quiz belongs",
+                                              "example": "609879f16836050e184a0db3",
+                                              "required": true
+                                            },
+                                            "file": {
+                                              "type": "array",
+                                              "description": "Array of attached files",
+                                              "items": {
+                                                "type": "string",
+                                                "format": "binary",
+                                                "description": "Binary data of the file"
+                                              }
+                                            },
+                                            "due_date": {
+                                              "type": "string",
+                                              "format": "date-time",
+                                              "description": "The due date of the quiz",
+                                              "example": "2024-05-10T00:00:00Z",
+                                              "required": true
+                                            }
+                                      
+                                    }}
+                                  }],
+                                  "responses":{
+                                    "201": {
+                                        "description":  "Quiz was created"
+                                      },
+                                      
+                                      "500": {
+                                        "description": "There was an error processing your request. Please try again later."
+                                      } 
+                                }
+                                  }},
+                                  "/api/quiz/put/{id}":{
+                                    "put":{
+                                      "summary": "Update a new Quiz",
+                                      "description":"Update a new Quiz and add it to the database",
+                                      "tags":["Quizs"],
+                                      "security":[
+                                        {
+                                      "Bearer":[]
+                                         }
+                              ],
+                                      "parameters":[{
+                                        "name":"id",
+                                        "in":"path",
+                                        "description":"ID of the Quiz to update",
+                                        "required":"true",
+                                        "type":"string"
+                                        },
+                                        {
+                                            "name": "body",
+                                            "in": "body",
+                                            "description": "Quiz details",
+                                            "required": true,
+                                            "schema": {
+                                              "type": "object",
+                                              "properties": {
+                                                "userId": {
+                                                  "type": "string",
+                                                  "description": "The ObjectId of the user who created the quiz",
+                                                  "example": "609879f16836050e184a0db3",
+                                                  "required": true
+                                                },
+                                                "title": {
+                                                  "type": "string",
+                                                  "description": "The title of the quiz",
+                                                  "example": "Quiz 1",
+                                                  "required": true
+                                                },
+                                                "description": {
+                                                  "type": "string",
+                                                  "description": "The description of the quiz",
+                                                  "example": "Description of Quiz 1",
+                                                  "required": true
+                                                },
+                                                "grade": {
+                                                  "type": "string",
+                                                  "description": "The grade of the quiz",
+                                                  "example": "A",
+                                                  "required": false
+                                                },
+                                                "course": {
+                                                  "type": "string",
+                                                  "description": "The ObjectId of the course to which the quiz belongs",
+                                                  "example": "609879f16836050e184a0db3",
+                                                  "required": true
+                                                },
+                                                "file": {
+                                                  "type": "array",
+                                                  "description": "Array of attached files",
+                                                  "items": {
+                                                    "type": "string",
+                                                    "format": "binary",
+                                                    "description": "Binary data of the file"
+                                                  }
+                                                },
+                                                "due_date": {
+                                                  "type": "string",
+                                                  "format": "date-time",
+                                                  "description": "The due date of the quiz",
+                                                  "example": "2024-05-10T00:00:00Z",
+                                                  "required": true
+                                                }
+                                                   
+                                              }
+                                            }
+                                          }
+                                     ],
+                                    "responses":{
+                                      "201": {
+                                          "description": "Quiz Updated"
+                                        },
+                                       
+                                        "500": {
+                                          "description": "There was an error processing your request. Please try again later."
+                                        } 
+                                  }
+                                    }},
+                                    "/api/quiz/all":{
+                                      "get":{
+                                          "summary":"Get all Quizs",
+                                          "description":"All Quizs",
+                                          "tags":["Quizs"],
+                                          "security":[
+                                            {
+                                          "Bearer":[]
+                                             }
+                                  ],
+                                          "responses":{
+                                              "200":{
+                                                  "description":"A list of all  Quizs"
+                                              },
+                                              "400":{
+                                                  "description":"OPPS......Something went wrong"
+                                              }  
+                                          }
+                          
+                                     }},
+                                     "/api/quiz/getOne/{id}":{
+                                      "get":{
+                                          "summary": "Get a Quiz by ID",
+                                          "description": "Get a Quiz by ID",
+                                          "tags": ["Quizs"],
+                                          "security":[
+                                            {
+                                          "Bearer":[]
+                                             }
+                                  ],
+                                          "parameters": [
+                                            {
+                                              "name": "id",
+                                              "in": "path",
+                                              "description": "ID of the Quiz to retrieve",
+                                              "required": true,
+                                              "type": "string"
+                                            }
+                                          ],
+                                          "responses": {
+                                            "200": {
+                                              "description": "Successful response"
+                                            },
+                                            "404": {
+                                              "description": "Quiz not found"
+                                            }
+                                          }
+                                      }},
+                                      "/api/quiz/delete/{id}":{
+                                        "delete":{
+                                          "summary": "Delete A Quiz by ID",
+                                          "description": "Delete a Quiz by ID",
+                                          "tags": ["Quizs"],
+                                          "security":[
+                                            {
+                                          "Bearer":[]
+                                             }
+                                  ],
+                                          "parameters": [
+                                            {
+                                              "name": "id",
+                                              "in": "path",
+                                              "description": "ID of the Quiz to be delete",
+                                              "required": true,
+                                              "type": "string"
+                                            }
+                                          ],
+                                          "responses": {
+                                            "204": {
+                                              "description": "Quiz deleted"
+                                            },
+                                            "404": {
+                                              "description": "Quiz not found"
+                                            }
+                                          }
+                                        }},
+
+                                        "/api/assign/create":{
+                                          "post":{
+                                            "summary": "Create a new Assignment",
+                                            "description":"Create a new Assignment and add it to the database",
+                                            "tags":["Assignments"],
+                                            "security":[
+                                              {
+                                            "Bearer":[]
+                                               }
+                                    ],
+                                            "parameters":[{
+                                              "name":"body",
+                                              "in":"body",
+                                              "description":" Assignment details",
+                                              "required":"true",
+                                              "schema":{
+                                                "userId": {
+                                                  "type": "string",
+                                                  "description": "The ObjectId of the user who created the assignment",
+                                                  "example": "609879f16836050e184a0db3",
+                                                  "required": true
+                                                },
+                                                "title": {
+                                                  "type": "string",
+                                                  "description": "The title of the assignment",
+                                                  "example": "Assignment 1",
+                                                  "required": true
+                                                },
+                                                "description": {
+                                                  "type": "string",
+                                                  "description": "The description of the assignment",
+                                                  "example": "Description of Assignment 1"
+                                                },
+                                                "file": {
+                                                  "type": "array",
+                                                  "description": "Array of attached files",
+                                                  "items": {
+                                                    "type": "string",
+                                                    "format": "binary",
+                                                    "description": "Binary data of the file",
+                                                    "required": true
+                                                  }
+                                                },
+                                                
+                                                "due_date": {
+                                                  "type": "string",
+                                                  "format": "date-time",
+                                                  "description": "The due date of the assignment",
+                                                  "example": "2024-05-10T00:00:00Z",
+                                                  "required": true
+                                                },
+                                                "course": {
+                                                  "type": "string",
+                                                  "description": "The ObjectId of the course to which the assignment belongs",
+                                                  "example": "609879f16836050e184a0db3"
+                                                }
+                                              
+                                            }
+                                          }],
+                                          "responses":{
+                                            "201": {
+                                                "description":  "Assignment was created"
+                                              },
+                                              
+                                              "500": {
+                                                "description": "There was an error processing your request. Please try again later."
+                                              } 
+                                        }
+                                          }},
+                                          "/api/assign/put/{id}":{
+                                            "put":{
+                                              "summary": "Update a new Assignment",
+                                              "description":"Update a new Assignment and add it to the database",
+                                              "tags":["Assignments"],
+                                              "security":[
+                                                {
+                                              "Bearer":[]
+                                                 }
+                                      ],
+                                              "parameters":[{
+                                                "name":"id",
+                                                "in":"path",
+                                                "description":"ID of the Assignment to update",
+                                                "required":"true",
+                                                "type":"string"
+                                                },
+                                                {
+                                                    "name": "body",
+                                                    "in": "body",
+                                                    "description": "Quiz details",
+                                                    "required": true,
+                                                    "schema": {
+                                                      "type": "object",
+                                                      "properties": {
+                                                        "userId": {
+                                                          "type": "string",
+                                                          "description": "The ObjectId of the user who created the assignment",
+                                                          "example": "609879f16836050e184a0db3",
+                                                          "required": true
+                                                        },
+                                                        "title": {
+                                                          "type": "string",
+                                                          "description": "The title of the assignment",
+                                                          "example": "Assignment 1",
+                                                          "required": true
+                                                        },
+                                                        "description": {
+                                                          "type": "string",
+                                                          "description": "The description of the assignment",
+                                                          "example": "Description of Assignment 1"
+                                                        },
+                                                        "file": {
+                                                          "type": "array",
+                                                          "description": "Array of attached files",
+                                                          "items": {
+                                                            "type": "string",
+                                                            "format": "binary",
+                                                            "description": "Binary data of the file",
+                                                            "required": true
+                                                          }
+                                                        },
+                                                        "grade": {
+                                                          "type": "string",
+                                                          "description": "The grade of the assignment"
+                                                        },
+                                                        "due_date": {
+                                                          "type": "string",
+                                                          "format": "date-time",
+                                                          "description": "The due date of the assignment",
+                                                          "example": "2024-05-10T00:00:00Z",
+                                                          "required": true
+                                                        },
+                                                        "course": {
+                                                          "type": "string",
+                                                          "description": "The ObjectId of the course to which the assignment belongs",
+                                                          "example": "609879f16836050e184a0db3"
+                                                        }
+                                                           
+                                                      }
+                                                    }
+                                                  }
+                                             ],
+                                            "responses":{
+                                              "201": {
+                                                  "description": "Assignment Updated"
+                                                },
+                                               
+                                                "500": {
+                                                  "description": "There was an error processing your request. Please try again later."
+                                                } 
+                                          }
+                                            }},
+                                            "/api/assign/delete/{id}":{
+                                              "delete":{
+                                                "summary": "Delete Assignment by ID",
+                                                "description": "Delete Assignment by ID",
+                                                "tags": ["Assignments"],
+                                                "security":[
+                                                  {
+                                                "Bearer":[]
+                                                   }
+                                        ],
+                                                "parameters": [
+                                                  {
+                                                    "name": "id",
+                                                    "in": "path",
+                                                    "description": "ID of the Assignment to be delete",
+                                                    "required": true,
+                                                    "type": "string"
+                                                  }
+                                                ],
+                                                "responses": {
+                                                  "204": {
+                                                    "description": "Assignment deleted"
+                                                  },
+                                                  "404": {
+                                                    "description": "Assignment not found"
+                                                  }
+                                                }
+                                              }},
+                                              "/api/assign/getOne/{id}":{
+                                                "get":{
+                                                    "summary": "Get assignment by ID",
+                                                    "description": "Get an assignment by ID",
+                                                    "tags": ["Assignments"],
+                                                    "security":[
+                                                      {
+                                                    "Bearer":[]
+                                                       }
+                                            ],
+                                                    "parameters": [
+                                                      {
+                                                        "name": "id",
+                                                        "in": "path",
+                                                        "description": "ID of the assignment to retrieve",
+                                                        "required": true,
+                                                        "type": "string"
+                                                      }
+                                                    ],
+                                                    "responses": {
+                                                      "200": {
+                                                        "description": "Successful response"
+                                                      },
+                                                      "404": {
+                                                        "description": "assignment not found"
+                                                      }
+                                                    }
+                                                }},
+                                                "/api/assign/all":{
+                                                  "get":{
+                                                      "summary":"Get all assignments",
+                                                      "description":"All assignments",
+                                                      "tags":["Assignments"],
+                                                      "security":[
+                                                        {
+                                                      "Bearer":[]
+                                                         }
+                                              ],
+                                                      "responses":{
+                                                          "200":{
+                                                              "description":"A list of all  asssignments"
+                                                          },
+                                                          "400":{
+                                                              "description":"OPPS......Something went wrong"
+                                                          }  
+                                                      }
+                                      
+                                                 }},
+                                          "/api/content/create":{
+                                            "post":{
+                                              "summary": "Create a new Content",
+                                              "description":"Create a new Content and add it to the database",
+                                              "tags":["Contents"],
+                                              "security":[
+                                                {
+                                              "Bearer":[]
+                                                 }
+                                      ],
+                                              "parameters":[{
+                                                "name":"body",
+                                                "in":"body",
+                                                "description":" Content details",
+                                                "required":"true",
+                                                "schema":{
+                                                    "type":"object",
+                                                    "properties":{
+                                                      "userId": {
+                                                        "type": "string",
+                                                        "description": "The ObjectId of the user who created the content",
+                                                        "example": "609879f16836050e184a0db3",
+                                                        "required": true
+                                                      },
+                                                      "course_id": {
+                                                        "type": "string",
+                                                        "description": "The ObjectId of the course to which the content belongs",
+                                                        "example": "609879f16836050e184a0db3",
+                                                        "required": true
+                                                      },
+                                                      "type": {
+                                                        "type": "string",
+                                                        "description": "The type of the content",
+                                                        "example": "lecture",
+                                                        "required": true
+                                                      },
+                                                      "title": {
+                                                        "type": "string",
+                                                        "description": "The title of the content"
+                                                      },
+                                                      "description": {
+                                                        "type": "string",
+                                                        "description": "The description of the content"
+                                                      },
+                                                      "file": {
+                                                        "type": "array",
+                                                        "description": "Array of file paths",
+                                                        "items": {
+                                                          "type": "string",
+                                                          "description": "Path to the file"
+                                                        }
+                                                      },
+                                                      "order": {
+                                                        "type": "integer",
+                                                        "description": "The order of the content within the course"
+                                                      }
+                                                
+                                              }}
+                                            }],
+                                            "responses":{
+                                              "201": {
+                                                  "description":  "Content was created"
+                                                },
+                                                
+                                                "500": {
+                                                  "description": "There was an error processing your request. Please try again later."
+                                                } 
+                                          }
+                                            }},
+                                            "/api/content/update/{id}":{
+                                              "put":{
+                                                "summary": "Update a new Content",
+                                                "description":"Update a new Content and add it to the database",
+                                                "tags":["Contents"],
+                                                "security":[
+                                                  {
+                                                "Bearer":[]
+                                                   }
+                                        ],
+                                                "parameters":[{
+                                                  "name":"id",
+                                                  "in":"path",
+                                                  "description":"ID of the Content to update",
+                                                  "required":"true",
+                                                  "type":"string"
+                                                  },
+                                                  {
+                                                      "name": "body",
+                                                      "in": "body",
+                                                      "description": "Content details",
+                                                      "required": true,
+                                                      "schema": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                          "userId": {
+                                                            "type": "string",
+                                                            "description": "The ObjectId of the user who created the content",
+                                                            "example": "609879f16836050e184a0db3",
+                                                            "required": true
+                                                          },
+                                                          "course_id": {
+                                                            "type": "string",
+                                                            "description": "The ObjectId of the course to which the content belongs",
+                                                            "example": "609879f16836050e184a0db3",
+                                                            "required": true
+                                                          },
+                                                          "type": {
+                                                            "type": "string",
+                                                            "description": "The type of the content",
+                                                            "example": "lecture",
+                                                            "required": true
+                                                          },
+                                                          "title": {
+                                                            "type": "string",
+                                                            "description": "The title of the content"
+                                                          },
+                                                          "description": {
+                                                            "type": "string",
+                                                            "description": "The description of the content"
+                                                          },
+                                                          "file": {
+                                                            "type": "array",
+                                                            "description": "Array of file paths",
+                                                            "items": {
+                                                              "type": "string",
+                                                              "description": "Path to the file"
+                                                            }
+                                                          },
+                                                          "order": {
+                                                            "type": "integer",
+                                                            "description": "The order of the content within the course"
+                                                          }
+                                                             
+                                                        }
+                                                      }
+                                                    }
+                                               ],
+                                              "responses":{
+                                                "201": {
+                                                    "description": "Content Updated"
+                                                  },
+                                                 
+                                                  "500": {
+                                                    "description": "There was an error processing your request. Please try again later."
+                                                  } 
+                                            }
+                                              }},
+                                              "/api/content/delete/{id}":{
+                                                "delete":{
+                                                  "summary": "Delete Content by ID",
+                                                  "description": "Delete Content by ID",
+                                                  "tags": ["Contents"],
+                                                  "security":[
+                                                    {
+                                                  "Bearer":[]
+                                                     }
+                                          ],
+                                                  "parameters": [
+                                                    {
+                                                      "name": "id",
+                                                      "in": "path",
+                                                      "description": "ID of the Content to be delete",
+                                                      "required": true,
+                                                      "type": "string"
+                                                    }
+                                                  ],
+                                                  "responses": {
+                                                    "204": {
+                                                      "description": "Content deleted"
+                                                    },
+                                                    "404": {
+                                                      "description": "Content not found"
+                                                    }
+                                                  }
+                                                }},
+                                                "/api/content/getone/{id}":{
+                                                  "get":{
+                                                      "summary": "Get a Content by ID",
+                                                      "description": "Get a Content by ID",
+                                                      "tags": ["Contents"],
+                                                      "security":[
+                                                        {
+                                                      "Bearer":[]
+                                                         }
+                                              ],
+                                                      "parameters": [
+                                                        {
+                                                          "name": "id",
+                                                          "in": "path",
+                                                          "description": "ID of the Content to retrieve",
+                                                          "required": true,
+                                                          "type": "string"
+                                                        }
+                                                      ],
+                                                      "responses": {
+                                                        "200": {
+                                                          "description": "Successful response"
+                                                        },
+                                                        "404": {
+                                                          "description": "Content not found"
+                                                        }
+                                                      }
+                                                  }},
+                                                  "/api/content/all":{
+                                                    "get":{
+                                                        "summary":"Get all contents",
+                                                        "description":"All contents",
+                                                        "tags":["Contents"],
+                                                        "security":[
+                                                          {
+                                                        "Bearer":[]
+                                                           }
+                                                ],
+                                                        "responses":{
+                                                            "200":{
+                                                                "description":"A list of all  contents"
+                                                            },
+                                                            "400":{
+                                                                "description":"OPPS......Something went wrong"
+                                                            }  
+                                                        }
+                                        
+                                                   }}
+
 }
   }
     

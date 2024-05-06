@@ -250,7 +250,7 @@ console.log(req.body);
 
     // Delete the OTP record from the database
     await otpModel.deleteOne({ token });
-
+     
     // Respond with success message
     return res.status(200).json({ message: 'Password reset successfully' });
 })
