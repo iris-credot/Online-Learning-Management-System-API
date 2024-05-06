@@ -2,7 +2,7 @@ const express = require('express');
 const Announcerouter= express.Router();
 const badwordsMiddleware= require('../middleware/inappropriateContent')
 const  AnnounceController = require('../controllers/announcController');
-
+const notify = require('../middleware/Notify');
 const auth = require('../middleware/authentication');
 
 Announcerouter.get('/all', auth.AuthJWT, AnnounceController.getAllAnnou);

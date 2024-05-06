@@ -1,6 +1,7 @@
 const express = require('express');
 const Quizrouter= express.Router();
 const multer = require('multer');
+const notify = require('../middleware/Notify');
 const  QuizController = require('../controllers/quizController');
 const storage = multer.diskStorage({
     destination: 'Uploads/Quiz/',

@@ -9,76 +9,72 @@
     "schemes":["http","https"],
 
     "paths":{
-        "/user/all":{
-            "get":{
-                "summary":"Get all users",
-                "description":"All users",
-                "tags":["Users"],
-                "responses":{
-                    "200":{
-                        "description":"A list of all users"
-                    },
-                    "400":{
-                        "description":"OPPS......Something went wrong"
-                    }  
-                }
-
-           }
-        },
-        "/user/signup":{
-             "post":{
-                "summary":"Create a new user",
-                "description":"Create a new user and add it to the database",
-                "tags":["Authentication","Users"],
-                "parameters":[{
-                    "name":"body",
-                    "in":"body",
-                    "description":"User details",
-                    "required":"true",
-                    "schema":{
-                        "type":"object",
-                        "properties":{
-                          "username":{
-                            "type": "string",
-                            "required": [true,"Please provide your username first"]
-                         },
-                              "name":{
-                               "type": "string",
-                               "required": [true,"Please provide email first"]
-                            },
-                            "email":{
-                            "type": "string",
-                            "required": [true,"Please provide email first"],
-                            "unique": "true",
-                            "lowercase": "true",
-                            "validate":["isEmail","Please provide a valid email"]
-                            },
-                           "password":{
-                            "type": "string",
-                            "required": [true,"Please provide email first"],
-                            "minLength": [6,"Must be at least 6 characters"]
-                            }
-                              
-                        }
-                    }
-                }],
-                "responses":{
-                    "201": {
-                        "description": "User created"
-                      },
-                      "403": {
-                        "description": "A User with this email already exists."
-                      },
-                      "500": {
-                        "description": "There was an error processing your request. Please try again later."
-                      } 
-                }
-
-             }           
-},
-"/login":{
-    "post":{
-       "summary":"Login a new user",
+      "/api/user/signup":{
+      "post":{
+        "summary": "Register a new user",
+        "description":"Create a new user and add it to the database",
+        "tags":["Authentication"],
+        "parameters":[{
+          "name":"body",
+          "in":"body",
+          "description":"User details",
+          "required":"true",
+          "schema":{
+              "type":"object",
+              "properties":{
+                "username":{
+                  "type": "string",
+                  "required": [true,"Please provide your username first"]
+               },
+                    "name":{
+                     "type": "string",
+                     "required": [true,"Please provide email first"]
+                  },
+                  "profile": {
+                    "names": { "type": "String" },
+                    "bio": { "type": "String" },
+                    "avatar": { "type": "String" }
+                },
+                  "role": {
+                    "type": "String",
+                    "enum": ["student", "admin"],
+                    "default": "student"
+                },
+                 "otpExpires":{"type":"String"},
+                 "otp":{"type":"String", "required": [true,"Please provide email first"]},
+                 "verified":{"type":"Boolean","default":false },
+                  "email":{
+                  "type": "string",
+                  "required": [true,"Please provide email first"],
+                  "unique": "true",
+                  "lowercase": "true",
+                  "validate":["isEmail","Please provide a valid email"]
+                  },
+                 "password":{
+                  "type": "string",
+                  "required": [true,"Please provide email first"],
+                  "minLength": [6,"Must be at least 6 characters"]
+                  },
+                  "last_login": { "type": "Date" }
+                    
+              }
+          }
+      }],
+      "responses":{
+        "201": {
+            "description": "User created"
+          },
+          "403": {
+            "description": "A User with this email already exists."
+          },
+          "500": {
+            "description": "There was an error processing your request. Please try again later."
+          } 
+    }
+      }},
+    "/api/user/login":{
+      "post":{
+        "summary":"Login a new user",
        "description":"Login a new user and add it to the database",
        "tags":["Authentication"],
        "parameters":[{
@@ -98,7 +94,7 @@
                    },
                   "password":{
                    "type": "string",
-                   "required": [true,"Please provide email first"],
+                   "required": [true,"Please provide password first"],
                    "minLength": [6,"Must be at least 6 characters"]
                    }
                      
@@ -116,10 +112,106 @@
                "description": "There was an error processing your request. Please try again later."
              } 
        }
-    }           
-},
-"/user/allone/{id}":{
-    "get":{
+      }},
+    "/api/user/logout":{
+      "post":{
+        "summary": "Log out a user",
+        "description": "End the user session.",
+        "tags":["Authentication"],
+        "responses": {
+          "200": {
+            "description": "Logout successful."
+          },
+          "400": {
+            "description": "Bad request."
+          }
+          }
+    }},
+    "/api/user/forgot":{
+      "post":{
+        "summary": "Request forgot password",
+        "description": "Forgot Password.",
+        "tags":["Authentication"],
+        "parameters":[{
+          "name":"body",
+          "in":"body",
+          "description":"User details",
+          "required":"true",
+          "schema":{
+              "type":"object",
+              "properties":{
+                  "email":{
+                 "type": "string",
+                  "required": [true,"Please provide email first"],
+                  "unique": "true",
+                  "lowercase": "true",
+                  "validate":["isEmail","Please provide a valid email"]
+                  }                    
+              }
+          }
+      }],
+      "responses": {
+        "200": {
+          "description": "Password reset link sent."
+        },
+        "400": {
+          "description": "Bad request."
+        }
+      }
+      }},
+   "/api/user/resetpassword":{
+      "post":{
+        "summary": "Reset password",
+        "tags":["Authentication"],
+        "parameters":[{
+          "name":"body",
+          "in":"body",
+          "description":"User details",
+          "required":"true",
+          "schema":{
+              "type":"object",
+              "properties":{
+                  "email":{
+                 "type": "string",
+                  "required": [true,"Please provide email first"],
+                  "unique": "true",
+                  "lowercase": "true",
+                  "validate":["isEmail","Please provide a valid email"]
+                  },
+                 "newPassword":{
+                  "type": "string",
+                  "required": [true,"Please provide password first"],
+                  "minLength": [6,"Must be at least 6 characters"]
+                  }
+                    
+              }
+          }
+      }],
+              "responses": {
+                "200": {
+                  "description": "Password reset successful."
+                },
+                "400": {
+                  "description": "Bad request."
+                }
+              }
+      }},
+    "/api/user/all":{
+      "get":{
+      "summary":"Get all users",
+      "description":"All users",
+      "tags":["Users"],
+      "responses":{
+          "200":{
+              "description":"A list of all users"
+          },
+          "400":{
+              "description":"OPPS......Something went wrong"
+          }  
+      }
+    }},
+    "/api/user/getOne/{id}":{
+      "get":{
         "summary": "Get a user by ID",
         "description": "Get a user by ID",
         "tags": ["Users"],
@@ -134,15 +226,85 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response"
+            "description": "Successful, user found"
           },
           "404": {
             "description": "User not found"
           }
         }
-    },
-    "put":{
-      "summary":"Update a user by ID",
+    }},
+    "/api/user/findByname":{
+      "get":{
+        "summary": "Get a user by name",
+        "description": "Get a user by name",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "name of the user to retrieve",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful, user found"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+    }},
+    "/api/user/findByRole":{
+     "get":{
+      "summary": "Get a user by role",
+      "description": "Get a user by role",
+      "tags": ["Users"],
+      "parameters": [
+        {
+          "name": "role",
+          "in": "query",
+          "description": "Role of the user to retrieve",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful, user found"
+        },
+        "404": {
+          "description": "User not found"
+        }
+      }
+     }},
+    "/api/user/delete/{id}":{
+      "delete":{
+        "summary": "Delete a user by ID",
+        "description": "Delete a user by ID",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the user to be delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User deleted"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+    }},
+    "/put/{id}":{
+      "put":{
+        "summary":"Update a user by ID",
       "description":"Update an existing user in the database",
       "tags":["Users"],
       "parameters":[{
@@ -168,6 +330,19 @@
                      "type": "string",
                      "required": [true,"Please provide email first"]
                   },
+                  "profile": {
+                    "names": { "type": "String" },
+                    "bio": { "type": "String" },
+                    "avatar": { "type": "String" }
+                },
+                  "role": {
+                    "type": "String",
+                    "enum": ["student", "admin"],
+                    "default": "student"
+                },
+                 "otpExpires":{"type":"String"},
+                 "otp":{"type":"String", "required": [true,"Please provide email first"]},
+                 "verified":{"type":"Boolean","default":false },
                   "email":{
                   "type": "string",
                   "required": [true,"Please provide email first"],
@@ -175,16 +350,13 @@
                   "lowercase": "true",
                   "validate":["isEmail","Please provide a valid email"]
                   },
-                  "profile":{
-                   "name":{ "type": "string"},
-                   "bio":{ "type": "string"},
-                   "avatar":{ "type": "string"}
-                  },
                  "password":{
                   "type": "string",
                   "required": [true,"Please provide email first"],
                   "minLength": [6,"Must be at least 6 characters"]
-                  }
+                  },
+                  "last_login": { "type": "Date" }
+                    
                     
                }
              }
@@ -198,89 +370,417 @@
              "description": "User not found"
            }
       }
-    },
-    "delete":{
-      "summary": "Delete a user by ID",
-      "description": "Delete a user by ID",
-      "tags": ["Users"],
+    }},
+    "/api/user/update/{id}":{
+      "put":{
+        "summary": "Update user's password (Authenticated user)",
+        "tags":["Users"],
+        "parameters":[{
+          "name":"id",
+          "in":"path",
+          "description":"ID of the user to update",
+          "required":"true",
+          "type":"string"
+          },
+          {
+              "name": "body",
+              "in": "body",
+              "description": "User details",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                 "username":{
+                   "type": "string",
+                   "required": [true,"Please provide your username first"]
+                },
+                     "newPassword":{
+                      "type": "string",
+                      "required": [true,"Please provide email first"],
+                      "minLength": [6,"Must be at least 6 characters"]
+                     },
+                   
+                  "currentPassword":{
+                   "type": "string",
+                   "required": [true,"Please provide email first"],
+                   "minLength": [6,"Must be at least 6 characters"]
+                   }
+                     
+                     
+                }
+              }
+            }
+       ],
+              "responses":{
+                "200": {
+                    "description": "User's password updated successfully"
+                  },
+                  "404": {
+                    "description": "User not found"
+                  }
+             }
+      }},
+    "/api/user/verifyotp":{
+      "post":{
+        "summary": "Verify OTP for account verification",
+        "tags":["Authentication"],
+        "parameters":[{
+          "name":"body",
+          "in":"body",
+          "description":"User details",
+          "required":"true",
+          "schema":{
+            "type":"object",
+            "properties":{
+                "otp":{
+               "type": "string",
+                "required": [true,"Please provide otp"]
+                }                    
+            }
+        }
+    }],
+              "responses":{
+                "200": {
+                    "description": "User's password updated successfully"
+                  },
+                  "404": {
+                    "description": "User not found"
+                  }
+             }
+      }},
+      
+ "/api/course/all":{
+  "get":{
+      "summary":"Get all courses",
+      "description":"All coursess",
+      "tags":["Courses"],
+      "responses":{
+          "200":{
+              "description":"A list of all courses"
+          },
+          "400":{
+              "description":"OPPS......Something went wrong"
+          }  
+      }
+ }},
+ "/api/course/getone/{id}":{
+  "get":{
+      "summary": "Get a course by ID",
+      "description": "Get a course by ID",
+      "tags": ["Courses"],
       "parameters": [
         {
           "name": "id",
           "in": "path",
-          "description": "ID of the user to be delete",
+          "description": "ID of the course to retrieve",
           "required": true,
           "type": "string"
         }
       ],
       "responses": {
-        "204": {
-          "description": "User deleted"
+        "200": {
+          "description": "Successful response"
         },
         "404": {
-          "description": "User not found"
+          "description": "Course not found"
         }
       }
-    }
- },
- "/user/findByname":{
-   "get":{
-    "summary": "Get a user by name",
-    "description": "Get a user by name",
-    "tags": ["Users"],
+  }},
+  "/api/course/delete/{id}":{
+  "delete":{
+    "summary": "Delete a course by ID",
+    "description": "Delete a course by ID",
+    "tags": ["Courses"],
     "parameters": [
       {
-        "name": "name",
-        "in": "query",
-        "description": "name of the user to retrieve",
+        "name": "id",
+        "in": "path",
+        "description": "ID of the course to be delete",
         "required": true,
         "type": "string"
       }
     ],
     "responses": {
-      "200": {
-        "description": "Successful response"
+      "204": {
+        "description": "Course deleted"
       },
       "404": {
         "description": "User not found"
-      }
-    }
-   }
- },
- "/user/findByRole":{
-   "get":{
-
-    "summary": "Get a user by role",
-        "description": "Get a user by role",
-        "tags": ["Users"],
-        "parameters": [
-          {
-            "name": "role",
-            "in": "query",
-            "description": "Role of the user to retrieve",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response"
-          },
-          "404": {
-            "description": "User not found"
-          }
+      }}
+  }},
+  "/api/course/create":{
+    "post":{
+      "summary": "Register a new course",
+      "description":"Create a new course and add it to the database",
+      "tags":["Courses"],
+      "parameters":[{
+        "name":"body",
+        "in":"body",
+        "description":"course details",
+        "required":"true",
+        "schema":{
+            "type":"object",
+            "properties":{
+              "title":{
+                "type": "string",
+                "required": [true,"Please provide title first"]
+             },
+             "description":{
+                    "type": "string",
+                    "required": [true,"Please provide description first"]
+                },
+                "category": {
+                  "type": "string",
+                "required": [true,"Please provide category first"]
+              },
+             
+              "creator":{
+                "type": "string",
+                "description": "The ObjectId of the user who created the course",
+                "required": [true,"Please provide category first"]
+              }
+                  
+            }
         }
-}
- },
- "/course/create":{
-  "post":{
+    }],
+    "responses":{
+      "201": {
+          "description": "course created"
+        },
+        "403": {
+          "description": "A User with this email already exists."
+        },
+        "500": {
+          "description": "There was an error processing your request. Please try again later."
+        } 
+  }
+    }},
+    "/api/course/update/{id}":{
+      "put":{
+        "summary":"Update a course by ID",
+        "description":"Update an existing course in the database",
+        "tags":["Courses"],
+        "parameters":[{
+           "name":"id",
+           "in":"path",
+           "description":"ID of the Course to update",
+           "required":"true",
+           "type":"string"
+           },
+           {
+               "name": "body",
+               "in": "body",
+               "description": "Course details",
+               "required": true,
+               "schema": {
+                 "type": "object",
+                 "properties": {
+                  "title":{
+                    "type": "string",
+                    "required": [true,"Please provide title first"]
+                 },
+                 "description":{
+                        "type": "string",
+                        "required": [true,"Please provide description first"]
+                    },
+                    "category": {
+                      "type": "string",
+                    "required": [true,"Please provide category first"]
+                  },
+                 
+                  "creator":{
+                    "type": "string",
+                    "description": "The ObjectId of the user who created the course",
+                    "required": [true,"Please provide category first"]
+                  }
+                      
+                      
+                 }
+               }
+             }
+        ],
+        "responses":{
+           "200": {
+               "description": "Course updated successfully"
+             },
+             "404": {
+               "description": "Course not found"
+             }
+        }
+      }},
 
-  }
- },
- "":{
-  "get":{
-    
-  }
- }
+      "/api/announce/all":{
+        "get":{
+            "summary":"Get all announcements",
+            "description":"All announcements",
+            "tags":["Announcements"],
+            "responses":{
+                "200":{
+                    "description":"A list of all announcements"
+                },
+                "400":{
+                    "description":"OPPS......Something went wrong"
+                }  
+            }
+       }},
+       "/api/announce/getOne/{id}":{
+        "get":{
+            "summary": "Get an announcement by ID",
+            "description": "Get an announcementby ID",
+            "tags": ["Announcements"],
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "description": "ID of the announcement to retrieve",
+                "required": true,
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Successful response"
+              },
+              "404": {
+                "description": "Course not found"
+              }
+            }
+        }},
+        "/api/announce/delete/{id}":{
+          "delete":{
+            "summary": "Delete an announcement by ID",
+            "description": "Delete an announcement by ID",
+            "tags": ["Announcements"],
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "description": "ID of the announcement to be delete",
+                "required": true,
+                "type": "string"
+              }
+            ],
+            "responses": {
+              "204": {
+                "description": "announcement deleted"
+              },
+              "404": {
+                "description": "User not found"
+              }}
+          }},
+          "/api/announce/create":{
+            "post":{
+              "summary": "Create a new announcement",
+              "description":"Create a new announcementand add it to the database",
+              "tags":["Announcements"],
+              "parameters":[{
+                "name":"body",
+                "in":"body",
+                "description":"announcement details",
+                "required":"true",
+                "schema":{
+                    "type":"object",
+                    "properties":{
+                      "title": {
+                        "type": "string",
+                        "description": "The title of the announcement",
+                        "required": true
+                      },
+                      "content": {
+                        "type": "string",
+                        "description": "The content of the announcement",
+                        "required": true
+                      },
+                      "author": {
+                        "type": "string",
+                        "description": "The ObjectId of the user who created the announcement",
+                        "required": true
+                      },
+                      "target_course": {
+                        "type": "string",
+                        "description": "The ObjectId of the target course for the announcement (optional)"
+                      },
+                      "target_all_users": {
+                        "type": "boolean",
+                        "description": "Indicates whether the announcement is targeted to all users (default: false)"
+                      }
+                          
+                    }
+                }
+            }],
+            "responses":{
+              "201": {
+                  "description": "announcement created"
+                },
+                "403": {
+                  "description": "An announcementwith this email already exists."
+                },
+                "500": {
+                  "description": "There was an error processing your request. Please try again later."
+                } 
+          }
+            }},
+            "/api/announce/put/{id}":{
+              "put":{
+                "summary": "Update a new announcement",
+                "description":"Update a new announcementand add it to the database",
+                "tags":["Announcements"],
+                "parameters":[{
+                  "name":"id",
+                  "in":"path",
+                  "description":"ID of the announcement to update",
+                  "required":"true",
+                  "type":"string"
+                  },
+                  {
+                      "name": "body",
+                      "in": "body",
+                      "description": "Announcement details",
+                      "required": true,
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "description": "The title of the announcement",
+                            "required": true
+                          },
+                          "content": {
+                            "type": "string",
+                            "description": "The content of the announcement",
+                            "required": true
+                          },
+                          "author": {
+                            "type": "string",
+                            "description": "The ObjectId of the user who created the announcement",
+                            "required": true
+                          },
+                          "target_course": {
+                            "type": "string",
+                            "description": "The ObjectId of the target course for the announcement (optional)"
+                          },
+                          "target_all_users": {
+                            "type": "boolean",
+                            "description": "Indicates whether the announcement is targeted to all users (default: false)"
+                          }
+                             
+                             
+                        }
+                      }
+                    }
+               ],
+              "responses":{
+                "201": {
+                    "description": "announcement Updated"
+                  },
+                  "403": {
+                    "description": "An announcementwith this email already exists."
+                  },
+                  "500": {
+                    "description": "There was an error processing your request. Please try again later."
+                  } 
+            }
+              }}
 }
-}
+  }
     

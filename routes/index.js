@@ -8,7 +8,7 @@ const Quizrouter = require('./quizroute');
 const Subrouter = require('./subroute');
 const Contentrouter = require('./contentroute');
 const express = require('express');
-
+const notify = require('../middleware/Notify');
 
 const Router= express.Router();
 

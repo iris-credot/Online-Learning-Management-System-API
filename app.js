@@ -18,7 +18,7 @@ const cookieParser = require('cookie-parser');
 const  requireAuth = require('./middleware/authentication');
 
 const app = express();
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerjson));
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerjson));
 // middleware
 app.use(express.static('public'));
 app.use(express.json());
@@ -50,7 +50,7 @@ app.use(cookieParser());
 // app.get('*', checkUser);
 
 app.use((req, res, next) => {
-  if (req.path.startsWith('/course/create') || req.path.startsWith('/announce/create') || req.path.startsWith('/assign/create') || req.path.startsWith('/quiz/create') || req.path.startsWith('/grade/createGradeQuiz') || req.path.startsWith('/grade/createGradeAssig')) {
+  if (req.path.startsWith('/api/course/create') || req.path.startsWith('/api/announce/create') || req.path.startsWith('/api/assign/create') || req.path.startsWith('/api/quiz/create') || req.path.startsWith('/api/grade/createGradeQuiz') || req.path.startsWith('/api/grade/createGradeAssig')) {
     console.log('New upload detected:', req.path);
     // Here you can add code to send a notification to users
     if(req.path.startsWith('/course/create')){
@@ -77,5 +77,5 @@ app.use((req, res, next) => {
 });
 
 
-app.use('/', AllRoutes);
+app.use('/api', AllRoutes);
 app.use(errorHandling);
