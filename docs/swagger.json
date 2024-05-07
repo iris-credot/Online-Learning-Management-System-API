@@ -139,6 +139,26 @@
         "summary": "Request forgot password",
         "description": "Forgot Password.",
         "tags":["Authentication"],
+        "parameters":[{
+          "name":"body",
+          "in":"body",
+          "description":"User email if forgot password",
+          "required":"true",
+          "schema":{
+              "type":"object",
+              "properties":{
+                  "email":{
+                 "type": "string",
+                  "required": [true,"Please provide email first"],
+                  "unique": "true",
+                  "lowercase": "true",
+                  "validate":["isEmail","Please provide a valid email"]
+                  }
+                  
+                    
+              }
+          }
+      }],
       "responses": {
         "200": {
           "description": "Password reset link sent."
