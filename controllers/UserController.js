@@ -210,7 +210,7 @@ const authController ={
           expirationDate: new Date().getTime() + (60 * 1000 * 5),
       });
   
-      const link = `https://online-learning-management-system-api.onrender.com/reset-password?token=${token}&id=${foundUser.id}`;
+      const link = `https://online-learning-management-system.onrender.com/reset-password?token=${token}&id=${foundUser.id}`;
       const emailBody = `Click on the link bellow to reset your password\n\n${link}`;
   
       await sendEmail(req.body.email, "Reset your password", emailBody);

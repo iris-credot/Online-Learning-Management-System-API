@@ -37,14 +37,7 @@
                      "type": "string",
                      "required": [true,"Please provide email first"]
                   },
-                 
-                  "role": {
-                    "type": "String",
-                    "enum": ["student", "admin"],
-                    "default": "student"
-                },
-              
-                 "verified":{"type":"Boolean","default":false },
+                
                   "email":{
                   "type": "string",
                   "required": [true,"Please provide email first"],
