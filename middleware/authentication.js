@@ -6,10 +6,19 @@ const verifier = process.env.SECRET_KEY
 
 const requireAuth ={
  AuthJWT : async(req,res,next) => {
-    
+  const authorizationHeader = req.headers.authorization;
+  
+  
+  if (authorizationHeader) {
+      const parts = authorizationHeader.split(' ');
+      if (parts.length === 2 && parts[0] === 'Bearer') {
+          token = parts[1];
+      }
+  } 
+  if(!token){
     token = req.cookies.jwt;
     // console.log(token);
-  
+  }
   if (!token) {
     res.status(401).json({ error: 'Authentication required. Please log in.' });
     return;
@@ -35,9 +44,19 @@ const requireAuth ={
 
 adminJWT : async(req,res,next) => {
     
-  token = req.cookies.jwt;
-  // console.log(token);
-
+  const authorizationHeader = req.headers.authorization;
+  
+  
+  if (authorizationHeader) {
+      const parts = authorizationHeader.split(' ');
+      if (parts.length === 2 && parts[0] === 'Bearer') {
+          token = parts[1];
+      }
+  } 
+  if(!token){
+    token = req.cookies.jwt;
+    // console.log(token);
+  }
 if (!token) {
   res.status(401).json({ error: 'Authentication required. Please log in.' });
   return;
