@@ -18,7 +18,7 @@ const cookieParser = require('cookie-parser');
 
 
 const app = express();
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerjson));
+app.use('/LMS', swaggerUi.serve, swaggerUi.setup(swaggerjson));
 
 
 app.use(express.json());
